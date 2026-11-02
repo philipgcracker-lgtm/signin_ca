@@ -18,6 +18,17 @@ return [
         'token' => env('POSTMARK_TOKEN'),
     ],
 
+    // SMS: SMS_DRIVER=log writes to the log and sends nothing; set to twilio for real texts.
+    'sms' => [
+        'driver' => env('SMS_DRIVER', 'log'),
+    ],
+
+    'twilio' => [
+        'sid' => env('TWILIO_SID'),
+        'token' => env('TWILIO_TOKEN'),
+        'from' => env('TWILIO_FROM'),
+    ],
+
     'ses' => [
         'key' => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),

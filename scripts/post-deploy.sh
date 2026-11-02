@@ -41,6 +41,22 @@ echo "php: $PHP ($("$PHP" -r 'echo PHP_VERSION;'))"
 [ -f public/build/manifest.json ] || echo "WARN: public/build/manifest.json missing (Vite assets not shipped)"
 
 "$PHP" artisan migrate --force
+
+# One-off pilot seed. Runs only if you created /home/scaninca/repositories/signin_ca/.run-seed-pilot
+# containing the owner agent's email on its first line. The marker is deleted after a successful seed;
+# if the seed fails the deploy aborts and the marker stays. The command is idempotent.
+SEED_MARKER="$APP/.run-seed-pilot"
+if [ -f "$SEED_MARKER" ]; then
+  SEED_AGENT="$(head -n1 "$SEED_MARKER" | tr -d '\r\n ')"
+  if [ -n "$SEED_AGENT" ]; then
+    "$PHP" artisan scanin:seed-pilot --agent="$SEED_AGENT"
+    rm -f "$SEED_MARKER"
+    echo "seed: pilot event seeded, marker removed"
+  else
+    echo "WARN seed: $SEED_MARKER is empty (put the owner agent's email on line 1); skipped"
+  fi
+fi
+
 [ -e public/storage ] || "$PHP" artisan storage:link
 "$PHP" artisan optimize
 "$PHP" artisan queue:restart

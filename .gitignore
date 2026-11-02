@@ -32,3 +32,6 @@ yarn-error.log
 # AgentIndex material (separate project)
 /SPEC.md
 /research/
+
+# One-off seed trigger created by hand on the server (see scripts/post-deploy.sh)
+/.run-seed-pilot
