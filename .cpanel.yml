@@ -3,4 +3,4 @@
 # All logic lives in scripts/post-deploy.sh (logs to storage/logs/deploy.log).
 deployment:
   tasks:
-    - /bin/bash /home/scanica/repositories/signin_ca/scripts/post-deploy.sh
+    - /bin/bash /home/scaninca/repositories/signin_ca/scripts/post-deploy.sh
