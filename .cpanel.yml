@@ -1,0 +1,6 @@
+---
+# cPanel > Git Version Control > "Deploy HEAD Commit" runs these tasks.
+# All logic lives in scripts/post-deploy.sh (logs to storage/logs/deploy.log).
+deployment:
+  tasks:
+    - /bin/bash /home/scanica/repositories/signin_ca/scripts/post-deploy.sh
