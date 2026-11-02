@@ -10,8 +10,8 @@
 
 set -eu
 
-APP="/home/scanica/repositories/signin_ca"
-DOCROOT="/home/scanica/public_html"
+APP="/home/scaninca/repositories/signin_ca"
+DOCROOT="/home/scaninca/public_html"
 
 cd "$APP"
 mkdir -p storage/app/public storage/framework/cache/data storage/framework/sessions \
