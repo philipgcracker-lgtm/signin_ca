@@ -16,7 +16,7 @@ DOCROOT="/home/scaninca/public_html"
 cd "$APP"
 mkdir -p storage/app/public storage/framework/cache/data storage/framework/sessions \
          storage/framework/views storage/logs bootstrap/cache
-chmod -R ug+rwX storage bootstrap/cache
+find storage bootstrap/cache -type d -exec chmod ug+rwx {} +   # directories only: file mode changes would dirty tracked files
 
 exec >>"$APP/storage/logs/deploy.log" 2>&1
 echo

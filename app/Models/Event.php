@@ -77,6 +77,23 @@ class Event extends Model
     }
 
     /**
+     * Event times are stored in the app timezone (UTC on the server) but people
+     * read them as local clock time. v1 is Ontario-only, so display in Toronto
+     * time regardless of the app or server timezone.
+     */
+    public const DISPLAY_TIMEZONE = 'America/Toronto';
+
+    public function displayStart(): \Illuminate\Support\Carbon
+    {
+        return $this->event_start->copy()->setTimezone(self::DISPLAY_TIMEZONE);
+    }
+
+    public function displayEnd(): \Illuminate\Support\Carbon
+    {
+        return $this->event_end->copy()->setTimezone(self::DISPLAY_TIMEZONE);
+    }
+
+    /**
      * "74 Pinehurst Drive, Welland"
      */
     public function shortAddress(): string
