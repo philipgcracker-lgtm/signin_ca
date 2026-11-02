@@ -44,6 +44,11 @@ class Agent extends Authenticatable
         });
     }
 
+    public function events(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Event::class);
+    }
+
     /**
      * The password column is password_hash per the PRD schema.
      */

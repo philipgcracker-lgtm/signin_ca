@@ -24,3 +24,10 @@ Schedule::command('queue:work --stop-when-empty --max-time=55 --tries=3')
     ->everyMinute()
     ->withoutOverlapping(5)
     ->runInBackground();
+
+// Backstop for check-in texts that were queued but not sent. The normal path
+// sends in the check-in request itself, right after the response.
+Schedule::command('messages:send-queued')
+    ->everyMinute()
+    ->withoutOverlapping(2)
+    ->runInBackground();
