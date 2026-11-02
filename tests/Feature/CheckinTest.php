@@ -10,7 +10,9 @@ use App\Models\Message;
 use App\Models\ShortLink;
 use App\Models\Visitor;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\RateLimiter;
 use Tests\TestCase;
 
 class CheckinTest extends TestCase
@@ -237,6 +239,37 @@ class CheckinTest extends TestCase
         }
 
         $this->post('/e/pinehurst/checkin', $this->payload(['phone' => '6135559999']))->assertStatus(429);
+    }
+
+    public function test_per_event_limit_is_keyed_on_the_event_not_the_url_slug(): void
+    {
+        // MySQL treats 'PINEHURST' and 'pinehurst ' as the same slug, so a limiter
+        // keyed on the raw URL segment could be sidestepped. The key is the event id.
+        for ($i = 0; $i < 300; $i++) {
+            RateLimiter::hit('checkin-event:'.$this->event->id, 3600);
+        }
+
+        $this->post('/e/pinehurst/checkin', $this->payload())->assertStatus(429);
+        $this->assertSame(0, Visitor::count());
+    }
+
+    public function test_a_concurrent_request_for_the_same_phone_does_not_create_a_second_visitor(): void
+    {
+        // Simulate request A holding the per-event+phone lock mid-save.
+        $lock = Cache::lock("checkin:{$this->event->id}:+16135550123", 30);
+        $this->assertTrue($lock->get());
+
+        $this->post('/e/pinehurst/checkin', $this->payload())->assertRedirect('/e/pinehurst/thanks');
+
+        $this->assertSame(0, Visitor::count());
+        $this->assertSame(0, Message::count());
+
+        $lock->release();
+
+        // Once the lock is free the same request records exactly one visitor.
+        $this->post('/e/pinehurst/checkin', $this->payload());
+        $this->assertSame(1, Visitor::count());
+        $this->assertSame(1, Message::count());
     }
 
     public function test_short_link_redirects_and_counts_clicks(): void

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CheckinRequest;
 use App\Jobs\SendQueuedMessage;
+use App\Models\Agent;
 use App\Models\Consent;
 use App\Models\ConsentText;
 use App\Models\Event;
@@ -13,9 +14,11 @@ use App\Models\Visitor;
 use App\Services\CheckinMessage;
 use App\Services\PhoneNumber;
 use App\Sms\SmsProvider;
+use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
 
@@ -25,6 +28,9 @@ use Illuminate\View\View;
  */
 class CheckinController extends Controller
 {
+    /** Check-ins accepted per event per hour (per-IP limit is the 'checkin' throttle). */
+    private const EVENT_LIMIT_PER_HOUR = 300;
+
     public function show(Event $event): View|RedirectResponse
     {
         abort_if($event->isCancelled(), 404);
@@ -56,6 +62,12 @@ class CheckinController extends Controller
             return redirect()->away($event->listing_url);
         }
 
+        // Per-event cap, keyed on the resolved event id (not the URL slug, which has
+        // case/whitespace variants that all reach the same event).
+        $eventKey = 'checkin-event:'.$event->id;
+        abort_if(RateLimiter::tooManyAttempts($eventKey, self::EVENT_LIMIT_PER_HOUR), 429);
+        RateLimiter::hit($eventKey, 3600);
+
         $thanks = redirect()->route('checkin.thanks', $event);
 
         // Honeypot: real visitors never see or fill this field. Look successful, store nothing.
@@ -66,22 +78,45 @@ class CheckinController extends Controller
         $data = $request->validated();
         $phone = PhoneNumber::toE164($data['phone']);
 
-        // Same phone, same event: no second visitor and no second text.
-        $already = Visitor::query()
-            ->where('event_id', $event->id)
-            ->where('phone_e164', $phone)
-            ->exists();
-
-        if ($already) {
-            return $thanks;
-        }
-
         $consentText = ConsentText::query()->findOrFail($data['consent_text_id']);
         $agent = $event->agent;
         $ip = $request->ip() ? @inet_pton($request->ip()) : false;
         $userAgent = Str::limit((string) $request->userAgent(), 255, '');
 
-        $message = DB::transaction(function () use ($data, $phone, $event, $agent, $consentText, $ip, $userAgent, $provider) {
+        // The schema has no unique (event_id, phone) index, so serialize the
+        // "already checked in?" check and the insert per event+phone. Without
+        // this, two simultaneous requests can both pass the check and send two texts.
+        try {
+            $message = Cache::lock("checkin:{$event->id}:{$phone}", 10)->block(2, function () use ($data, $phone, $event, $agent, $consentText, $ip, $userAgent, $provider) {
+                // Same phone, same event: no second visitor and no second text.
+                $already = Visitor::query()
+                    ->where('event_id', $event->id)
+                    ->where('phone_e164', $phone)
+                    ->exists();
+
+                return $already ? null : $this->record($data, $phone, $event, $agent, $consentText, $ip, $userAgent, $provider);
+            });
+        } catch (LockTimeoutException) {
+            // Another request for this same number is saving right now; it will record the visitor.
+            return $thanks;
+        }
+
+        if ($message === null) {
+            return $thanks;
+        }
+
+        // Runs in this request, after the response is sent: the visitor does not wait for Twilio.
+        SendQueuedMessage::dispatchAfterResponse($message->id);
+
+        return $thanks;
+    }
+
+    /**
+     * Writes visitor, consent, short link and the queued message atomically.
+     */
+    private function record(array $data, string $phone, Event $event, Agent $agent, ConsentText $consentText, string|false $ip, string $userAgent, SmsProvider $provider): Message
+    {
+        return DB::transaction(function () use ($data, $phone, $event, $agent, $consentText, $ip, $userAgent, $provider) {
             $visitor = Visitor::create([
                 'event_id' => $event->id,
                 'full_name' => trim($data['full_name']),
@@ -119,11 +154,6 @@ class CheckinController extends Controller
                 'status' => 'queued',
             ]);
         });
-
-        // Runs in this request, after the response is sent: the visitor does not wait for Twilio.
-        SendQueuedMessage::dispatchAfterResponse($message->id);
-
-        return $thanks;
     }
 
     public function thanks(Event $event): View
