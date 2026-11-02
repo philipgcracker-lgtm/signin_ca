@@ -10,7 +10,7 @@
 
   <h1>{{ $event->address_street }}</h1>
   <p class="sub">{{ $event->city }}, {{ $event->province }}@if (filled($event->postal_code)) {{ $event->postal_code }}@endif
-    &middot; {{ $event->event_start->format('D, M j') }}, {{ $event->event_start->format('g:i') }}&ndash;{{ $event->event_end->format('g:i A') }}</p>
+    &middot; {{ $event->displayStart()->format('D, M j') }}, {{ $event->displayStart()->format('g:i') }}&ndash;{{ $event->displayEnd()->format('g:i A') }}</p>
 
   @if ($event->price || $event->bedrooms || $event->bathrooms)
     <div class="facts">

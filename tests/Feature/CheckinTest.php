@@ -64,6 +64,21 @@ class CheckinTest extends TestCase
             ->assertDontSee('name="consent" value="1" checked', false);
     }
 
+    public function test_event_times_are_shown_in_toronto_time_whatever_the_app_timezone(): void
+    {
+        // Stored as UTC (the production app timezone): 2:00 PM to 4:00 PM Toronto on Nov 8 2026 (EST, UTC-5).
+        $this->event->update([
+            'event_start' => '2026-11-08 19:00:00',
+            'event_end' => '2026-11-08 21:00:00',
+        ]);
+        $this->travelTo(\Illuminate\Support\Carbon::parse('2026-11-08 18:00:00', 'UTC'));
+
+        $this->get('/e/pinehurst')
+            ->assertOk()
+            ->assertSee('Sun, Nov 8, 2:00&ndash;4:00 PM', false)
+            ->assertDontSee('7:00');
+    }
+
     public function test_checkin_page_is_plain_html_under_100kb_with_no_vite_assets(): void
     {
         $response = $this->get('/e/pinehurst');

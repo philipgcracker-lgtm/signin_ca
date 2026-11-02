@@ -35,3 +35,6 @@ yarn-error.log
 
 # One-off seed trigger created by hand on the server (see scripts/post-deploy.sh)
 /.run-seed-pilot
+
+# cPanel SSL manager / AutoSSL write validation files into the docroot; they are not ours
+/public/.well-known/
