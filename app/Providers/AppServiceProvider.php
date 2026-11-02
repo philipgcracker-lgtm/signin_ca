@@ -35,16 +35,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Check-in abuse limits (PRD: per IP and per event, no CAPTCHA).
+        // Check-in abuse limit per IP (PRD: per IP and per event, no CAPTCHA).
+        // The per-event limit lives in CheckinController::store(), keyed on the
+        // resolved event id: a key built from the URL slug could be bypassed
+        // with case or trailing-space variants that MySQL treats as equal.
         RateLimiter::for('checkin', function (Request $request) {
-            // Throttle runs before route-model binding, so `event` may still be the raw slug.
-            $event = $request->route('event');
-            $eventKey = is_object($event) ? $event->getRouteKey() : (string) $event;
-
-            return [
-                Limit::perMinute(8)->by('ip:'.$request->ip()),
-                Limit::perHour(300)->by('event:'.$eventKey),
-            ];
+            return Limit::perMinute(8)->by('ip:'.$request->ip());
         });
     }
 }
