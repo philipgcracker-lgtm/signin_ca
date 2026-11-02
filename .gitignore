@@ -28,3 +28,7 @@ yarn-error.log
 # Tooling
 /.remember/
 /.claude/
+
+# AgentIndex material (separate project)
+/SPEC.md
+/research/
