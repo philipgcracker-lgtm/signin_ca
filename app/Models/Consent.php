@@ -23,6 +23,7 @@ class Consent extends Model
         'agent_id',
         'consent_text_id',
         'channel',
+        'purpose',
         'granted',
         'ip_address',
         'user_agent',

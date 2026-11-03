@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CheckinController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ManualVisitorController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShortLinkController;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/events/{event}', [DashboardController::class, 'show'])
         ->whereNumber('event')
         ->name('events.show');
+    Route::get('/events/{event}/visitors/create', [ManualVisitorController::class, 'create'])
+        ->whereNumber('event')
+        ->name('visitors.create');
+    Route::post('/events/{event}/visitors', [ManualVisitorController::class, 'store'])
+        ->whereNumber('event')
+        ->name('visitors.store');
 });
 
 Route::middleware('auth')->group(function () {
