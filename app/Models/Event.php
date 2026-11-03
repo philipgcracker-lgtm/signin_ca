@@ -77,6 +77,22 @@ class Event extends Model
     }
 
     /**
+     * upcoming | live | ended | cancelled, from the clock (not the status column).
+     */
+    public function phase(): string
+    {
+        if ($this->isCancelled()) {
+            return 'cancelled';
+        }
+
+        if (now()->lessThan($this->event_start)) {
+            return 'upcoming';
+        }
+
+        return $this->hasEnded() ? 'ended' : 'live';
+    }
+
+    /**
      * Event times are stored in the app timezone (UTC on the server) but people
      * read them as local clock time. v1 is Ontario-only, so display in Toronto
      * time regardless of the app or server timezone.
