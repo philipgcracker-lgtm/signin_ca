@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CheckinController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShortLinkController;
 use Illuminate\Support\Facades\Route;
@@ -21,9 +22,12 @@ Route::get('/s/{code}', [ShortLinkController::class, 'show'])
     ->middleware('throttle:120,1')
     ->name('short.show');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/events/{event}', [DashboardController::class, 'show'])
+        ->whereNumber('event')
+        ->name('events.show');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
