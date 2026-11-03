@@ -26,10 +26,13 @@ Decided 2026-11-01: Laravel on cPanel, built evenings with Claude Code, Derek's 
 | M1 | Event + QR | Agent logs in, creates an event with `listing_url`, downloads a QR that opens `/e/{slug}` | 2 |
 | M2 | Check-in + SMS | Visitor submits name, mobile, consent; row + consent record written; SMS with short link arrives within 30 s; thank-you page shows the link as fallback | 3 |
 | **Pilot 1** | **Derek's open house** | Real visitors check in; you watch the logs | — |
-| M3 | Dashboard + feedback | Visitor list per event; feedback SMS 2 h after end; feedback form; STOP handling via Twilio webhook | 3 |
+| M3a | Manual add | Agent adds a paper-sheet visitor from the event page; row saved with `source = paper` and a consent record (`purpose = checkin`, paper wording version); text queued only if the box was ticked. Needs the `purpose` and `source` columns | 1 |
+| M3b | CSV export | Agent downloads an event's visitors as CSV with texting and marketing consent columns; revoked and anonymized rows handled | 1 |
+| M3 | Dashboard + feedback | Visitor list per event (done); feedback SMS 2 h after end; feedback form with a second question about the agent ending in the agent's Google review link, shown to everyone (needs `agents.google_review_url` and a profile field); STOP handling via Twilio webhook | 3 |
+| M3c | Newsletter checkbox | Separate optional "new listings" checkbox on the check-in form, stored as `purpose = marketing`. Only after the lawyer approves the wording | 1 |
 | M4 | Seller recap | HTML template, PDF render, emailed to seller with agent on CC, stored for re-download | 2 |
 | **Pilot 2** | **Derek's next open house** | Full loop: check-in, feedback, recap delivered | — |
-| M5 | Compliance + polish | Retention sweep, DELETE keyword, CSV export, privacy page, consent text versioning UI, lawyer wording dropped in | 2-3 |
+| M5 | Compliance + polish | Retention sweep, DELETE keyword, privacy page, consent text versioning UI, lawyer wording dropped in | 2-3 |
 | M6 | Billing | Laravel Cashier + Stripe, Free/Pro gating, SMS quota | 2-3 |
 
 Pilot 1 is Derek's next open house, expected the weekend of 2026-11-07. That leaves five evenings, so M1 is skipped for pilot 1: Derek's event is seeded into the database by hand and the dashboard comes after. Schedule: M0 Monday to Tuesday, M2 Wednesday to Friday, Saturday morning a real-phone test at your own door. Use a Canadian local long-code number for the pilot; Canadian long codes are not subject to 10DLC registration and send at low volume immediately. Submit toll-free verification in parallel for later.

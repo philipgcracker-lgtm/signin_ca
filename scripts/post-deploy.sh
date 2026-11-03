@@ -40,6 +40,10 @@ echo "php: $PHP ($("$PHP" -r 'echo PHP_VERSION;'))"
 [ -f .env ]               || fail ".env missing in $APP"
 [ -f public/build/manifest.json ] || echo "WARN: public/build/manifest.json missing (Vite assets not shipped)"
 
+# Drop the old cached config first, so migrate and the seed below read the current
+# .env (a cached config ignores .env edits). `optimize` rebuilds the cache after.
+"$PHP" artisan config:clear
+
 "$PHP" artisan migrate --force
 
 # One-off pilot seed. Runs only if you created /home/scaninca/repositories/signin_ca/.run-seed-pilot

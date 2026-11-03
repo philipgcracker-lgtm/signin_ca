@@ -37,6 +37,10 @@ V1 is three things: check-in, SMS link, seller recap. Everything else waits unti
 | Agent dashboard: events, visitors, feedback | v1 | Core |
 | Post-event QR redirect to listing page | v1 | Trivial once the link exists |
 | Visitor feedback (1-5 + notes), sent by SMS after the event | v1 | Feeds the seller recap |
+| Feedback page second question about the agent, ending in the agent's Google review link, shown to everyone whatever they rated | v1 | Reviews from people who met the agent. No review gating, no suggested review text, no reward |
+| Manual add of a visitor by the agent (paper sign-in sheet) | v1 | Same fields as the check-in form; `source = paper`; text queued only if the SMS box was ticked on paper |
+| Optional separate "new listings" checkbox on the check-in form | v1 | Own consent record (`purpose = marketing`); shown only once the lawyer approves the wording |
+| CSV export of an event's visitors, with consent columns | v1 | Moved up from M5; Derek needs it for his CRM and newsletter |
 | Agent webhook / CRM push | v2 | Nice to have; agents will ask for Follow Up Boss first |
 | Agent-side SMS follow-ups to visitors | v2 | Needs express consent flow and STOP handling done right |
 | DDF listing auto-fill | Deferred, maybe never | Requires a CREA Technology Provider agreement; saves 60 seconds of typing |
@@ -89,6 +93,15 @@ CASL and PIPEDA are the product's reason to exist, so they are built in, not bol
 - Every message identifies the sender (agent name and brokerage) and carries an unsubscribe mechanism. STOP is honoured within 10 business days by law; the system does it instantly.
 - The consent wording is a versioned text in the database, not a string in the template. Changing it creates a new version; old records keep the one they were shown.
 
+**Follow-up, newsletter, reviews and paper rows (added 2026-11-03; wording and scope subject to lawyer review)**
+
+1. The newsletter ("new listings") checkbox is separate, optional and unticked. It is never bundled with the listing-link consent. It is stored as its own consent record with `purpose = marketing`.
+2. Marketing is only ever sent to visitors with a granted, non-revoked `purpose = marketing` consent. "Working with an agent = yes" is a warning flag in the export, not an automatic exclusion, because the answer is optional and self-reported; the agent decides. [Lawyer to advise.]
+3. The Google review link is shown to everyone on the feedback page. It is never hidden by score. No wording tells the visitor what to write. No reward is offered.
+4. The review request is a page, not a text, until the lawyer says the feedback consent covers a second message that carries a review link.
+5. Revoking a consent (STOP, DELETE, agent action) sets `revoked_at`; the CSV export respects it.
+6. Manual add: the agent confirms on the form that the visitor ticked the box on the paper sheet. The consent record stores the paper wording version; IP and user agent are NULL.
+
 **PIPEDA**
 
 - Visitors see a one-line purpose statement on the form and a link to the privacy policy.
@@ -102,6 +115,10 @@ CASL and PIPEDA are the product's reason to exist, so they are built in, not bol
 - [ ] Final CASL consent wording for the checkbox
 - [ ] Whether message 2 can ride on the same consent as message 1 or needs a second checkbox
 - [ ] Processor language in the agent terms
+- [ ] Paper consent: is a tick on a sheet, typed in later, valid express consent for a text; what must be kept
+- [ ] Follow-up to visitors who are working with another agent (TRESA / RECO / brokerage rules)
+- [ ] Newsletter: separate checkbox required, and whether an open-house visit can support implied consent
+- [ ] Whether the Google review link may go in the feedback text or only on the feedback page
 
 ## Architecture
 
@@ -142,6 +159,7 @@ CREATE TABLE agents (
   phone VARCHAR(20),
   brokerage_name VARCHAR(255),
   headshot_url TEXT,
+  google_review_url TEXT NULL,
   webhook_url TEXT,
   subscription_tier ENUM('free','pro') NOT NULL DEFAULT 'free',
   retention_months TINYINT UNSIGNED NOT NULL DEFAULT 24,
@@ -190,6 +208,7 @@ CREATE TABLE sellers (
 CREATE TABLE visitors (
   id INT AUTO_INCREMENT PRIMARY KEY,
   event_id INT NOT NULL,
+  source ENUM('qr','paper') NOT NULL DEFAULT 'qr',
   full_name VARCHAR(255) NOT NULL,
   phone_e164 VARCHAR(16) NOT NULL,
   email VARCHAR(255),
@@ -222,6 +241,7 @@ CREATE TABLE consents (
   agent_id INT NOT NULL,
   consent_text_id INT NOT NULL,
   channel ENUM('sms','email') NOT NULL,
+  purpose ENUM('checkin','feedback','marketing') NOT NULL DEFAULT 'checkin',
   granted TINYINT(1) NOT NULL,
   ip_address VARBINARY(16),
   user_agent VARCHAR(255),
@@ -267,7 +287,7 @@ CREATE TABLE short_links (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
 
-Notes: `anonymized_at` marks a visitor whose personal fields were wiped by the retention job; the row stays so event counts and feedback averages survive. `messages.visitor_id` is nullable so delivery logs outlive a deleted visitor. If Option B (Postgres) wins, the ENUMs become CHECK constraints and `VARBINARY(16)` becomes `inet`.
+Notes: `consents.purpose` records what was agreed to (listing-link text, feedback text, newsletter); existing rows default to `checkin`. `visitors.source` marks a paper row typed in by the agent; for those the consent record's IP and user agent are NULL. `anonymized_at` marks a visitor whose personal fields were wiped by the retention job; the row stays so event counts and feedback averages survive. `messages.visitor_id` is nullable so delivery logs outlive a deleted visitor. If Option B (Postgres) wins, the ENUMs become CHECK constraints and `VARBINARY(16)` becomes `inet`.
 
 ## API endpoints
 
@@ -286,7 +306,8 @@ Public endpoints are rate-limited and unauthenticated. Agent endpoints require a
 | GET/PATCH/DELETE | `/api/events/{id}` | agent | Read, update, cancel |
 | GET | `/api/events/{id}/qr.png`, `/qr.pdf` | agent | QR image and printable sign |
 | GET | `/api/events/{id}/visitors` | agent | Visitor list with consent and feedback |
-| GET | `/api/events/{id}/visitors.csv` | agent | Export |
+| GET | `/api/events/{id}/visitors.csv` | agent | Export. Columns: name, phone, email, working with an agent, timeline, pre-approved, checked in at, source, texting consent (yes/no, date, wording version), marketing consent (yes/no, date, wording version), opted out. Optional filter: marketing consent only. Anonymized visitors excluded. |
+| GET/POST | `/events/{id}/visitors/create` | agent | Manual add of a visitor (paper sheet); page routes, scoped by `agent_id` |
 | POST | `/api/events/{id}/recap` | agent | Generate and email seller recap PDF |
 | GET | `/api/events/{id}/recap.pdf` | agent | Download stored recap |
 | GET/PATCH | `/api/me` | agent | Profile, brokerage, headshot, retention, webhook |
@@ -325,7 +346,7 @@ SMS cost is roughly 1 cent per segment, so 300 messages costs about $3; margin i
 - [ ] Stack: decided 2026-11-01, Option A (Laravel on cPanel). See the Build plan tab.
 - [ ] SMS provider: Twilio or Telnyx? Start A2P registration the same week either way.
 - [ ] Does the seller get the recap directly, or does the agent always forward it? Direct email with agent on CC is the proposal.
-- [ ] Agent webhook: wait for v2; Derek gets CSV export in the meantime.
+- [ ] Agent webhook: wait for v2. CSV export ships in v1 (Build plan M3b), so Derek has it in the meantime.
 - [ ] Domain: `scanin.ca` chosen 2026-11-01; CIPO search clear for "scanin". Register it.
 - [ ] Lawyer review of consent wording and agent terms before the first non-Derek signup.
 
