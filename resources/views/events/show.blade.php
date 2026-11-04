@@ -28,7 +28,8 @@
                     · {{ ucfirst($event->phase()) }}
                 </p>
             </div>
-            <p class="text-sm text-gray-500 break-all">Check-in page: <a class="text-gray-700 underline" href="{{ route('checkin.show', $event->slug) }}">{{ route('checkin.show', $event->slug) }}</a></p>
+            <a href="{{ route('visitors.create', $event->id) }}" class="rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-white hover:bg-gray-700">Add from paper sheet</a>
+            <p class="w-full text-sm text-gray-500 break-all">Check-in page: <a class="text-gray-700 underline" href="{{ route('checkin.show', $event->slug) }}">{{ route('checkin.show', $event->slug) }}</a></p>
         </div>
     </x-slot>
 
@@ -73,7 +74,7 @@
                                 @foreach ($rows as $r)
                                     @php $v = $r->visitor; @endphp
                                     <tr class="align-top">
-                                        <td class="px-4 py-3 whitespace-nowrap text-gray-500">{{ $v->created_at->copy()->setTimezone(\App\Models\Event::DISPLAY_TIMEZONE)->format('g:i A') }}</td>
+                                        <td class="px-4 py-3 whitespace-nowrap text-gray-500">{{ $v->created_at->copy()->setTimezone(\App\Models\Event::DISPLAY_TIMEZONE)->format('g:i A') }}@if ($v->source === 'paper') <span class="ml-1 rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-700">Paper</span>@endif</td>
                                         @if ($v->anonymized_at)
                                             <td class="px-4 py-3 text-gray-400 italic" colspan="3">Personal details removed</td>
                                         @else

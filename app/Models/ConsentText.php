@@ -31,6 +31,21 @@ class ConsentText extends Model
     public static function current(): ?self
     {
         return static::query()
+            ->where('version', 'not like', 'paper-%')
+            ->where('effective_from', '<=', now())
+            ->orderByDesc('effective_from')
+            ->orderByDesc('id')
+            ->first();
+    }
+
+    /**
+     * The wording printed on the paper sign-in sheet (versions starting "paper-").
+     * Kept apart from current() so a paper wording can never show on the online form.
+     */
+    public static function paper(): ?self
+    {
+        return static::query()
+            ->where('version', 'like', 'paper-%')
             ->where('effective_from', '<=', now())
             ->orderByDesc('effective_from')
             ->orderByDesc('id')
@@ -46,7 +61,7 @@ class ConsentText extends Model
         $body = $this->body;
 
         if (blank($agent->brokerage_name)) {
-            $body = str_replace(' ({brokerage})', '', $body);
+            $body = str_replace([' ({brokerage})', ', {brokerage}'], '', $body);
         }
 
         return str_replace(
