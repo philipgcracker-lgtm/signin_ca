@@ -39,13 +39,14 @@
     <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
-            <div class="grid grid-cols-2 gap-3 px-4 sm:px-0 md:grid-cols-5">
+            <div class="grid grid-cols-2 gap-3 px-4 sm:px-0 md:grid-cols-6">
                 @foreach ([
                     'Check-ins' => $summary['checkins'],
                     'Agreed to texts' => $summary['consented'],
                     'Texts sent' => $summary['delivered'],
                     'Texts failed' => $summary['failed'],
                     'Opted out' => $summary['opted_out'],
+                    'Feedback' => $summary['feedback'].($summary['avg_score'] ? ' · avg '.number_format($summary['avg_score'], 1) : ''),
                 ] as $label => $n)
                     <div class="bg-white rounded-lg shadow-sm p-4">
                         <p class="text-2xl font-semibold text-gray-900">{{ $n }}</p>
@@ -71,6 +72,7 @@
                                     <th class="px-4 py-3">Timeline</th>
                                     <th class="px-4 py-3">Consent</th>
                                     <th class="px-4 py-3">Text</th>
+                                    <th class="px-4 py-3">Feedback</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
@@ -102,6 +104,16 @@
                                                 <span class="rounded-full px-2 py-0.5 text-xs {{ $statusClass[$r->text->status] ?? 'bg-gray-100 text-gray-700' }}">{{ ucfirst($r->text->status) }}</span>
                                                 @if ($r->text->error)
                                                     <span class="mt-1 block max-w-xs text-xs text-red-600">{{ \Illuminate\Support\Str::limit($r->text->error, 120) }}</span>
+                                                @endif
+                                            @else
+                                                <span class="text-gray-400">—</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-4 py-3">
+                                            @if ($v->feedback_score !== null)
+                                                <span class="font-medium text-gray-900">{{ $v->feedback_score }}/5</span>
+                                                @if ($v->feedback_notes)
+                                                    <span class="mt-1 block max-w-xs text-xs text-gray-600">{{ \Illuminate\Support\Str::limit($v->feedback_notes, 200) }}</span>
                                                 @endif
                                             @else
                                                 <span class="text-gray-400">—</span>

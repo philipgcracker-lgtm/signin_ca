@@ -57,6 +57,8 @@ class DashboardController extends Controller
             'delivered' => $rows->filter(fn ($r) => in_array($r->text?->status, ['sent', 'delivered'], true))->count(),
             'failed' => $rows->filter(fn ($r) => in_array($r->text?->status, ['failed', 'undelivered'], true))->count(),
             'opted_out' => $rows->filter(fn ($r) => $r->visitor->sms_opt_out)->count(),
+            'feedback' => $rows->filter(fn ($r) => $r->visitor->feedback_score !== null)->count(),
+            'avg_score' => $rows->pluck('visitor.feedback_score')->filter()->avg(),
         ];
 
         return view('events.show', [

@@ -25,6 +25,13 @@
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
         </div>
 
+        <div>
+            <x-input-label for="google_review_url" :value="__('Google review link (optional)')" />
+            <x-text-input id="google_review_url" name="google_review_url" type="url" class="mt-1 block w-full" :value="old('google_review_url', $user->google_review_url)" placeholder="https://g.page/r/..." />
+            <p class="mt-1 text-sm text-gray-500">{{ __('Shown to every visitor after they send feedback, whatever they rated. Must start with https://') }}</p>
+            <x-input-error class="mt-2" :messages="$errors->get('google_review_url')" />
+        </div>
+
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 
