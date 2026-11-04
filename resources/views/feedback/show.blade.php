@@ -5,7 +5,7 @@
 @section('content')
 <div class="card">
   <h1>How did you like {{ $event->shortAddress() }}?</h1>
-  <p class="sub">Two quick questions. It takes about 20 seconds.</p>
+  <p class="sub">It takes about 20 seconds.</p>
 
   @if ($errors->any())
     <div class="err"><ul>@foreach ($errors->all() as $e)<li>{{ $e }}</li>@endforeach</ul></div>
@@ -27,6 +27,10 @@
     <label for="notes">Anything you'd like to add? <span style="font-weight:400;color:#6b7280">(optional)</span></label>
     <textarea id="notes" name="notes" rows="4" maxlength="2000" style="width:100%;font:inherit;padding:12px;border:1px solid #9ca3af;border-radius:8px">{{ old('notes') }}</textarea>
     <p class="purpose">Comments may be shared with the home's seller without your name.</p>
+
+    @if ($agent->google_review_url)
+      <p class="purpose" style="font-size:.9rem;color:#374151">Next, you'll have the chance to review {{ $agent->full_name }} on Google if you'd like to.</p>
+    @endif
 
     <button type="submit">Send</button>
   </form>

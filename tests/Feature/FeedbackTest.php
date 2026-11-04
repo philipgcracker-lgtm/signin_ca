@@ -83,6 +83,19 @@ class FeedbackTest extends TestCase
             ->assertSee('shared with the home');
     }
 
+    public function test_form_mentions_the_google_review_only_when_the_agent_has_a_link(): void
+    {
+        $this->get($this->show($this->visitor))
+            ->assertOk()
+            ->assertSee('review Derek Breton on Google');
+
+        $this->agent->update(['google_review_url' => null]);
+
+        $this->get($this->show($this->visitor))
+            ->assertOk()
+            ->assertDontSee('on Google');
+    }
+
     public function test_answer_is_saved_and_thanks_page_shows_the_google_link(): void
     {
         $response = $this->post($this->store($this->visitor), ['score' => '4', 'notes' => '  Lovely kitchen.  ']);
