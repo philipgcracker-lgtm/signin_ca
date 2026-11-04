@@ -27,6 +27,7 @@ class FeedbackController extends Controller
         return view('feedback.show', [
             'visitor' => $visitor,
             'event' => $visitor->event,
+            'agent' => $visitor->event->agent,
             'action' => URL::temporarySignedRoute('feedback.store', now()->addDays(2), ['visitor' => $visitor->id]),
         ]);
     }
