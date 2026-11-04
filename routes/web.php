@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ManualVisitorController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShortLinkController;
+use App\Http\Controllers\VisitorExportController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -28,6 +29,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/events/{event}', [DashboardController::class, 'show'])
         ->whereNumber('event')
         ->name('events.show');
+    Route::get('/events/{event}/visitors.csv', VisitorExportController::class)
+        ->middleware('throttle:30,1')
+        ->whereNumber('event')
+        ->name('visitors.csv');
     Route::get('/events/{event}/visitors/create', [ManualVisitorController::class, 'create'])
         ->whereNumber('event')
         ->name('visitors.create');

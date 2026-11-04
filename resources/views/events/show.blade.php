@@ -28,7 +28,10 @@
                     · {{ ucfirst($event->phase()) }}
                 </p>
             </div>
-            <a href="{{ route('visitors.create', $event->id) }}" class="rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-white hover:bg-gray-700">Add from paper sheet</a>
+            <div class="flex flex-wrap items-center gap-2">
+                <a href="{{ route('visitors.csv', $event->id) }}" class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">Download CSV</a>
+                <a href="{{ route('visitors.create', $event->id) }}" class="rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-white hover:bg-gray-700">Add from paper sheet</a>
+            </div>
             <p class="w-full text-sm text-gray-500 break-all">Check-in page: <a class="text-gray-700 underline" href="{{ route('checkin.show', $event->slug) }}">{{ route('checkin.show', $event->slug) }}</a></p>
         </div>
     </x-slot>
