@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CheckinController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EventQrController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\ManualVisitorController;
 use App\Http\Controllers\ProfileController;
@@ -37,6 +38,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/events/{event}', [DashboardController::class, 'show'])
         ->whereNumber('event')
         ->name('events.show');
+    Route::get('/events/{event}/qr.svg', [EventQrController::class, 'svg'])
+        ->middleware('throttle:60,1')
+        ->whereNumber('event')
+        ->name('events.qr');
+    Route::get('/events/{event}/sign', [EventQrController::class, 'sign'])
+        ->whereNumber('event')
+        ->name('events.sign');
     Route::get('/events/{event}/visitors.csv', VisitorExportController::class)
         ->middleware('throttle:30,1')
         ->whereNumber('event')
