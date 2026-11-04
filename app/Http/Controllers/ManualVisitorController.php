@@ -16,6 +16,7 @@ use App\Sms\SmsProvider;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\View\View;
 
 /**
@@ -26,6 +27,9 @@ use Illuminate\View\View;
  */
 class ManualVisitorController extends Controller
 {
+    /** Paper rows accepted per event per hour. */
+    private const EVENT_LIMIT_PER_HOUR = 300;
+
     public function create(Request $request, int $event): View
     {
         $event = $this->ownedEvent($request, $event);
@@ -41,6 +45,13 @@ class ManualVisitorController extends Controller
     public function store(ManualVisitorRequest $request, int $event, SmsProvider $provider): RedirectResponse
     {
         $event = $this->ownedEvent($request, $event);
+        abort_if($event->isCancelled(), 404);
+
+        // Same per-event hourly cap as the public check-in: this endpoint also sends texts.
+        $eventKey = 'manual-visitor-event:'.$event->id;
+        abort_if(RateLimiter::tooManyAttempts($eventKey, self::EVENT_LIMIT_PER_HOUR), 429);
+        RateLimiter::hit($eventKey, 3600);
+
         $data = $request->validated();
         $phone = PhoneNumber::toE164($data['phone']);
         $wantsText = (bool) ($data['sms_ok'] ?? false);

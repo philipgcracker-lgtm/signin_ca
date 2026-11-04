@@ -9,6 +9,7 @@ use App\Models\Event;
 use App\Models\Message;
 use App\Models\Visitor;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\RateLimiter;
 use Tests\TestCase;
 
 class ManualVisitorTest extends TestCase
@@ -142,6 +143,42 @@ class ManualVisitorTest extends TestCase
 
         $this->assertSame(0, Visitor::count());
         $this->assertSame(0, Message::count());
+    }
+
+    public function test_cancelled_event_is_a_404_for_saving(): void
+    {
+        $this->event->update(['status' => 'cancelled']);
+
+        $this->actingAs($this->agent)
+            ->post("/events/{$this->event->id}/visitors", $this->payload(['sms_ok' => '1']))
+            ->assertNotFound();
+
+        $this->assertSame(0, Message::count());
+    }
+
+    public function test_per_event_hourly_cap_stops_further_rows(): void
+    {
+        for ($i = 0; $i < 300; $i++) {
+            RateLimiter::hit('manual-visitor-event:'.$this->event->id, 3600);
+        }
+
+        $this->actingAs($this->agent)
+            ->post("/events/{$this->event->id}/visitors", $this->payload(['sms_ok' => '1']))
+            ->assertStatus(429);
+
+        $this->assertSame(0, Message::count());
+    }
+
+    public function test_per_minute_throttle_applies(): void
+    {
+        $this->actingAs($this->agent);
+
+        for ($i = 0; $i < 60; $i++) {
+            $this->post("/events/{$this->event->id}/visitors", ['full_name' => '', 'phone' => '']);
+        }
+
+        $this->post("/events/{$this->event->id}/visitors", $this->payload(['sms_ok' => '1']))->assertStatus(429);
+        $this->assertSame(0, Visitor::count());
     }
 
     public function test_event_page_links_to_the_form_and_marks_paper_rows(): void

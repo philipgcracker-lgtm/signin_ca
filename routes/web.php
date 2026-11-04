@@ -32,6 +32,7 @@ Route::middleware('auth')->group(function () {
         ->whereNumber('event')
         ->name('visitors.create');
     Route::post('/events/{event}/visitors', [ManualVisitorController::class, 'store'])
+        ->middleware('throttle:60,1')
         ->whereNumber('event')
         ->name('visitors.store');
 });
