@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CheckinController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\ManualVisitorController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShortLinkController;
@@ -18,6 +19,13 @@ Route::post('/e/{event:slug}/checkin', [CheckinController::class, 'store'])
     ->middleware('throttle:checkin')
     ->name('checkin.store');
 Route::get('/e/{event:slug}/thanks', [CheckinController::class, 'thanks'])->name('checkin.thanks');
+
+// Post-event feedback (signed per-visitor links; see App\Services\FeedbackLink).
+Route::middleware(['signed', 'throttle:30,1'])->whereNumber('visitor')->group(function () {
+    Route::get('/f/{visitor}', [FeedbackController::class, 'show'])->name('feedback.show');
+    Route::post('/f/{visitor}', [FeedbackController::class, 'store'])->name('feedback.store');
+    Route::get('/f/{visitor}/thanks', [FeedbackController::class, 'thanks'])->name('feedback.thanks');
+});
 
 // SMS short links.
 Route::get('/s/{code}', [ShortLinkController::class, 'show'])

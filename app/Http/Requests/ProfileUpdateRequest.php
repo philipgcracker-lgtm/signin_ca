@@ -26,6 +26,8 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(Agent::class)->ignore($this->user()->id),
             ],
+            // Shown to visitors as a button, so https only.
+            'google_review_url' => ['nullable', 'url:https', 'max:2000'],
         ];
     }
 }

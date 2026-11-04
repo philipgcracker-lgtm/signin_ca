@@ -28,6 +28,7 @@ class Agent extends Authenticatable
         'phone',
         'brokerage_name',
         'headshot_url',
+        'google_review_url',
     ];
 
     /**
