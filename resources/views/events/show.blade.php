@@ -29,6 +29,8 @@
                 </p>
             </div>
             <div class="flex flex-wrap items-center gap-2">
+                <a href="{{ route('events.sign', $event->id) }}" target="_blank" class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">Door sign</a>
+                <a href="{{ route('events.qr', [$event->id, 'download' => 1]) }}" class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">QR (SVG)</a>
                 <a href="{{ route('visitors.csv', $event->id) }}" class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">Download CSV</a>
                 <a href="{{ route('visitors.create', $event->id) }}" class="rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-white hover:bg-gray-700">Add from paper sheet</a>
             </div>
