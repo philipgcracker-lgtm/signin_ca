@@ -20,6 +20,7 @@ return array(
     'App\\Http\\Controllers\\ManualVisitorController' => $baseDir . '/app/Http/Controllers/ManualVisitorController.php',
     'App\\Http\\Controllers\\ProfileController' => $baseDir . '/app/Http/Controllers/ProfileController.php',
     'App\\Http\\Controllers\\ShortLinkController' => $baseDir . '/app/Http/Controllers/ShortLinkController.php',
+    'App\\Http\\Controllers\\VisitorExportController' => $baseDir . '/app/Http/Controllers/VisitorExportController.php',
     'App\\Http\\Requests\\Auth\\LoginRequest' => $baseDir . '/app/Http/Requests/Auth/LoginRequest.php',
     'App\\Http\\Requests\\CheckinRequest' => $baseDir . '/app/Http/Requests/CheckinRequest.php',
     'App\\Http\\Requests\\ManualVisitorRequest' => $baseDir . '/app/Http/Requests/ManualVisitorRequest.php',

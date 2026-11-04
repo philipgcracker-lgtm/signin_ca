@@ -494,6 +494,7 @@ class ComposerStaticInite3fc20f44727441e21b9fc61f438e959
         'App\\Http\\Controllers\\ManualVisitorController' => __DIR__ . '/../..' . '/app/Http/Controllers/ManualVisitorController.php',
         'App\\Http\\Controllers\\ProfileController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProfileController.php',
         'App\\Http\\Controllers\\ShortLinkController' => __DIR__ . '/../..' . '/app/Http/Controllers/ShortLinkController.php',
+        'App\\Http\\Controllers\\VisitorExportController' => __DIR__ . '/../..' . '/app/Http/Controllers/VisitorExportController.php',
         'App\\Http\\Requests\\Auth\\LoginRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Auth/LoginRequest.php',
         'App\\Http\\Requests\\CheckinRequest' => __DIR__ . '/../..' . '/app/Http/Requests/CheckinRequest.php',
         'App\\Http\\Requests\\ManualVisitorRequest' => __DIR__ . '/../..' . '/app/Http/Requests/ManualVisitorRequest.php',
