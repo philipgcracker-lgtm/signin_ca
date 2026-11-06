@@ -6,6 +6,7 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Console\\Commands\\ApproveAgent' => $baseDir . '/app/Console/Commands/ApproveAgent.php',
     'App\\Console\\Commands\\SeedPilot' => $baseDir . '/app/Console/Commands/SeedPilot.php',
     'App\\Console\\Commands\\SendQueuedMessages' => $baseDir . '/app/Console/Commands/SendQueuedMessages.php',
     'App\\Http\\Controllers\\Auth\\AuthenticatedSessionController' => $baseDir . '/app/Http/Controllers/Auth/AuthenticatedSessionController.php',
@@ -39,6 +40,7 @@ return array(
     'App\\Models\\ShortLink' => $baseDir . '/app/Models/ShortLink.php',
     'App\\Models\\Visitor' => $baseDir . '/app/Models/Visitor.php',
     'App\\Providers\\AppServiceProvider' => $baseDir . '/app/Providers/AppServiceProvider.php',
+    'App\\Rules\\SafeListingUrl' => $baseDir . '/app/Rules/SafeListingUrl.php',
     'App\\Services\\CheckinMessage' => $baseDir . '/app/Services/CheckinMessage.php',
     'App\\Services\\FeedbackLink' => $baseDir . '/app/Services/FeedbackLink.php',
     'App\\Services\\MessageSender' => $baseDir . '/app/Services/MessageSender.php',
