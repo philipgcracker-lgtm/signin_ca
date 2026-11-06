@@ -1,8 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Your open houses') }}
-        </h2>
+        <div class="flex items-center justify-between gap-3">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Your open houses') }}
+            </h2>
+            <a href="{{ route('events.create') }}" class="rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-white hover:bg-gray-700">New open house</a>
+        </div>
     </x-slot>
 
     <div class="py-12">
@@ -10,7 +13,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 @if ($events->isEmpty())
                     <div class="p-6 text-gray-600">
-                        No open houses yet.
+                        No open houses yet. <a href="{{ route('events.create') }}" class="text-gray-900 underline">Create your first one</a>.
                     </div>
                 @else
                     <ul class="divide-y divide-gray-100">

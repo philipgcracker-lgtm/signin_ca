@@ -41,6 +41,10 @@
     <div class="py-8">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
+            @if (session('status'))
+                <div class="mx-4 rounded-md bg-green-50 p-4 text-sm text-green-800 sm:mx-0">{{ session('status') }}</div>
+            @endif
+
             <div class="grid grid-cols-2 gap-3 px-4 sm:px-0 md:grid-cols-6">
                 @foreach ([
                     'Check-ins' => $summary['checkins'],
