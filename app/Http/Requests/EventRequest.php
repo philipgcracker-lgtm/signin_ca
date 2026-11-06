@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\SafeListingUrl;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Carbon;
 
@@ -29,7 +30,7 @@ class EventRequest extends FormRequest
             'event_date' => ['required', 'date_format:Y-m-d', 'after_or_equal:today'],
             'start_time' => ['required', 'date_format:H:i'],
             'end_time' => ['required', 'date_format:H:i', 'after:start_time'],
-            'listing_url' => ['required', 'url:http,https', 'max:2000'],
+            'listing_url' => ['required', 'url:https', 'max:2000', new SafeListingUrl],
             'price' => ['nullable', 'numeric', 'min:0', 'max:99999999'],
             'bedrooms' => ['nullable', 'integer', 'min:0', 'max:20'],
             'bathrooms' => ['nullable', 'numeric', 'min:0', 'max:20'],

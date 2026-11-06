@@ -4,16 +4,24 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Your open houses') }}
             </h2>
-            <a href="{{ route('events.create') }}" class="rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-white hover:bg-gray-700">New open house</a>
+            @if (auth()->user()->isApproved())
+                <a href="{{ route('events.create') }}" class="rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-white hover:bg-gray-700">New open house</a>
+            @endif
         </div>
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-4">
+            @if (session('error'))
+                <div class="mx-4 rounded-md bg-amber-50 p-4 text-sm text-amber-800 sm:mx-0">{{ session('error') }}</div>
+            @endif
+            @unless (auth()->user()->isApproved())
+                <div class="mx-4 rounded-md bg-amber-50 p-4 text-sm text-amber-800 sm:mx-0">Your account is waiting for approval. You will be able to create open houses once it is approved.</div>
+            @endunless
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 @if ($events->isEmpty())
                     <div class="p-6 text-gray-600">
-                        No open houses yet. <a href="{{ route('events.create') }}" class="text-gray-900 underline">Create your first one</a>.
+                        No open houses yet.@if (auth()->user()->isApproved()) <a href="{{ route('events.create') }}" class="text-gray-900 underline">Create your first one</a>.@endif
                     </div>
                 @else
                     <ul class="divide-y divide-gray-100">

@@ -25,6 +25,12 @@ class AgentFactory extends Factory
             'full_name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'password_hash' => static::$password ??= 'password',
+            'approved_at' => now(),
         ];
+    }
+
+    public function unapproved(): static
+    {
+        return $this->state(fn () => ['approved_at' => null]);
     }
 }

@@ -91,7 +91,9 @@ class CheckinTest extends TestCase
     {
         $this->event->update(['event_start' => now()->subHours(4), 'event_end' => now()->subHour()]);
 
-        $this->get('/e/pinehurst')->assertRedirect('https://derekbreton.ca/listing/30294107');
+        $this->get('/e/pinehurst')->assertOk()
+            ->assertSee('You are leaving ScanIn')
+            ->assertSee('https://derekbreton.ca/listing/30294107', false);
     }
 
     public function test_cancelled_and_unknown_events_are_404(): void
@@ -226,7 +228,7 @@ class CheckinTest extends TestCase
         $this->event->update(['event_start' => now()->subHours(4), 'event_end' => now()->subHour()]);
 
         $this->post('/e/pinehurst/checkin', $this->payload())
-            ->assertRedirect('https://derekbreton.ca/listing/30294107');
+            ->assertOk()->assertSee('derekbreton.ca');
 
         $this->assertSame(0, Visitor::count());
     }
