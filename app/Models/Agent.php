@@ -45,7 +45,13 @@ class Agent extends Authenticatable
         });
     }
 
-    public function events(): \Illuminate\Database\Eloquent\Relations\HasMany
+    /** Only approved agents can create open houses (set by the owner, never by the agent). */
+    public function isApproved(): bool
+    {
+        return $this->approved_at !== null;
+    }
+
+    public function events():\Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Event::class);
     }
@@ -73,6 +79,7 @@ class Agent extends Authenticatable
     {
         return [
             'password_hash' => 'hashed',
+            'approved_at' => 'datetime',
             'created_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];

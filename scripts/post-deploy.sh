@@ -61,6 +61,19 @@ if [ -f "$SEED_MARKER" ]; then
   fi
 fi
 
+# Agent approvals. Put one email per line in /home/scaninca/repositories/signin_ca/.run-approve-agents;
+# each is approved on this deploy, then the marker is removed. A bad email is reported, not fatal.
+APPROVE_MARKER="$APP/.run-approve-agents"
+if [ -f "$APPROVE_MARKER" ]; then
+  while IFS= read -r line || [ -n "$line" ]; do
+    email="$(printf '%s' "$line" | tr -d '\r\n ')"
+    [ -n "$email" ] || continue
+    "$PHP" artisan scanin:approve-agent "$email" || echo "WARN approve: could not approve $email"
+  done < "$APPROVE_MARKER"
+  rm -f "$APPROVE_MARKER"
+  echo "approve: marker processed and removed"
+fi
+
 [ -e public/storage ] || "$PHP" artisan storage:link
 "$PHP" artisan optimize
 "$PHP" artisan queue:restart

@@ -16,6 +16,7 @@ use App\Services\PhoneNumber;
 use App\Sms\SmsProvider;
 use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\RateLimiter;
@@ -31,12 +32,21 @@ class CheckinController extends Controller
     /** Check-ins accepted per event per hour (per-IP limit is the 'checkin' throttle). */
     private const EVENT_LIMIT_PER_HOUR = 300;
 
-    public function show(Event $event): View|RedirectResponse
+    /** After the event: tell the visitor where they are going before they leave ScanIn. */
+    private function leaving(Event $event): Response
+    {
+        return response()->view('checkin.leaving', [
+            'event' => $event,
+            'host' => parse_url($event->listing_url, PHP_URL_HOST),
+        ]);
+    }
+
+    public function show(Event $event): View|Response
     {
         abort_if($event->isCancelled(), 404);
 
         if ($event->hasEnded()) {
-            return redirect()->away($event->listing_url);
+            return $this->leaving($event);
         }
 
         $consent = ConsentText::current();
@@ -54,12 +64,12 @@ class CheckinController extends Controller
         ]);
     }
 
-    public function store(CheckinRequest $request, Event $event, SmsProvider $provider): RedirectResponse
+    public function store(CheckinRequest $request, Event $event, SmsProvider $provider): RedirectResponse|Response
     {
         abort_if($event->isCancelled(), 404);
 
         if ($event->hasEnded()) {
-            return redirect()->away($event->listing_url);
+            return $this->leaving($event);
         }
 
         // Per-event cap, keyed on the resolved event id (not the URL slug, which has

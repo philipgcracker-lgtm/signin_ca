@@ -163,6 +163,7 @@ CREATE TABLE agents (
   webhook_url TEXT,
   subscription_tier ENUM('free','pro') NOT NULL DEFAULT 'free',
   retention_months TINYINT UNSIGNED NOT NULL DEFAULT 24,
+  approved_at DATETIME NULL,  -- owner-set; NULL = cannot create events (anti-abuse: listing_url is texted to strangers). Sign-up is closed by default (SCANIN_REGISTRATION_OPEN).
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   deleted_at DATETIME NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

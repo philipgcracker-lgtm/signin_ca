@@ -16,13 +16,21 @@ use Illuminate\View\View;
  */
 class EventController extends Controller
 {
-    public function create(Request $request): View
+    public function create(Request $request): View|RedirectResponse
     {
+        if (! $request->user()->isApproved()) {
+            return $this->pending();
+        }
+
         return view('events.create');
     }
 
     public function store(EventRequest $request): RedirectResponse
     {
+        if (! $request->user()->isApproved()) {
+            return $this->pending();
+        }
+
         $data = $request->validated();
         $tz = config('app.timezone');
         $start = $request->startsAt();
@@ -50,6 +58,12 @@ class EventController extends Controller
 
         return redirect()->route('events.show', $event->id)
             ->with('status', 'Open house created. Print the door sign or download the QR below.');
+    }
+
+    private function pending(): RedirectResponse
+    {
+        return redirect()->route('dashboard')
+            ->with('error', 'Your account is waiting for approval before you can create open houses.');
     }
 
     /**

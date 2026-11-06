@@ -114,7 +114,7 @@ footer.f .logo span{color:var(--sage)}
 </div>
 <div class="nav-cta">
 <a class="login" href="{{ route('login') }}">Log in</a>
-<a class="btn btn-light" href="{{ route('register') }}">Get started</a>
+<a class="btn btn-light" href="{{ config('scanin.registration_open') ? route('register') : route('login') }}">Get started</a>
 </div>
 </nav>
 </header>
@@ -128,7 +128,7 @@ footer.f .logo span{color:var(--sage)}
 <h1>Ready to stop retyping sign-in sheets at midnight?</h1>
 <p class="lede">Guests scan a QR code at the door and check in on their own phone. ScanIn texts them your listing link and keeps every guest, with their consent on file, in one list.</p>
 <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center">
-<a class="btn btn-light" href="{{ route('register') }}">Get started</a>
+<a class="btn btn-light" href="{{ config('scanin.registration_open') ? route('register') : route('login') }}">Get started</a>
 <a class="btn btn-ghost" href="#how">See how it works</a>
 </div>
 </div>
@@ -196,7 +196,7 @@ footer.f .logo span{color:var(--sage)}
 <div class="wrap center">
 <h2>Live before Sunday.</h2>
 <p>A few minutes to set up. Nothing to carry or wipe down.</p>
-<a class="btn btn-dark" href="{{ route('register') }}" style="margin-top:8px">Get started</a>
+<a class="btn btn-dark" href="{{ config('scanin.registration_open') ? route('register') : route('login') }}" style="margin-top:8px">Get started</a>
 </div>
 <div class="cols">
 <div class="col"><span class="n">01</span><h3>Add the open house.</h3><p>Address, time, and a link to your own listing page. No data feed to hook up.</p></div>
@@ -248,7 +248,7 @@ footer.f .logo span{color:var(--sage)}
 <div class="final">
 <h2>Your next open house is the easiest place to start.</h2>
 <p>Set it up this week. Every guest in one place by Sunday night.</p>
-<a class="btn btn-light" href="{{ route('register') }}">Get started</a>
+<a class="btn btn-light" href="{{ config('scanin.registration_open') ? route('register') : route('login') }}">Get started</a>
 </div>
 </section>
 
