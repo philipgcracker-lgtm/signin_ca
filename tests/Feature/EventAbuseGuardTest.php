@@ -102,6 +102,11 @@ class EventAbuseGuardTest extends TestCase
             'userinfo' => ['https://derekbreton.ca@evil.example/x'],
             'own domain' => ['https://scanin.ca/e/other'],
             'own subdomain' => ['https://login.scanin.ca/x'],
+            'own domain trailing dot' => ['https://scanin.ca./x'],
+            'short ip' => ['https://127.1/x'],
+            'numeric tld' => ['https://10.0.1/x'],
+            'double dot' => ['https://evil..example.com/x'],
+            'backslash' => ['https://evil.example.com\\@derekbreton.ca/x'],
         ];
     }
 
