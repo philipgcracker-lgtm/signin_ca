@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CheckinController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventQrController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\ManualVisitorController;
@@ -35,6 +36,10 @@ Route::get('/s/{code}', [ShortLinkController::class, 'show'])
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
+    Route::post('/events', [EventController::class, 'store'])
+        ->middleware('throttle:20,1')
+        ->name('events.store');
     Route::get('/events/{event}', [DashboardController::class, 'show'])
         ->whereNumber('event')
         ->name('events.show');
