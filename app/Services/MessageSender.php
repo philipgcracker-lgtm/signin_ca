@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Event;
 use App\Models\Message;
+use App\Models\Visitor;
 use App\Sms\SmsProvider;
 use Illuminate\Support\Str;
 use Throwable;
@@ -37,7 +38,10 @@ class MessageSender
 
         $message = Message::query()->with('visitor')->findOrFail($messageId);
 
-        if ($message->visitor?->sms_opt_out) {
+        // Opt-out follows the phone number, not the check-in: someone who replied
+        // STOP at one open house stays unsubscribed at the next one.
+        if ($message->visitor?->sms_opt_out
+            || ($message->direction === 'out' && Visitor::query()->where('phone_e164', $message->to_addr)->where('sms_opt_out', true)->exists())) {
             $this->finish($message, 'failed', error: 'Suppressed: visitor opted out.');
 
             return;
