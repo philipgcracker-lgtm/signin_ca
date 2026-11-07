@@ -18,8 +18,8 @@ class EventController extends Controller
 {
     public function create(Request $request): View|RedirectResponse
     {
-        if (! $request->user()->isApproved()) {
-            return $this->pending();
+        if (! $request->user()->canCreateEvents()) {
+            return $this->pending($request);
         }
 
         return view('events.create');
@@ -27,8 +27,8 @@ class EventController extends Controller
 
     public function store(EventRequest $request): RedirectResponse
     {
-        if (! $request->user()->isApproved()) {
-            return $this->pending();
+        if (! $request->user()->canCreateEvents()) {
+            return $this->pending($request);
         }
 
         $data = $request->validated();
@@ -60,10 +60,12 @@ class EventController extends Controller
             ->with('status', 'Open house created. Print the door sign or download the QR below.');
     }
 
-    private function pending(): RedirectResponse
+    private function pending(Request $request): RedirectResponse
     {
         return redirect()->route('dashboard')
-            ->with('error', 'Your account is waiting for approval before you can create open houses.');
+            ->with('error', $request->user()->isSuspended()
+                ? 'Your account is suspended. Contact ScanIn to restore it.'
+                : 'Your account is waiting for approval before you can create open houses.');
     }
 
     /**

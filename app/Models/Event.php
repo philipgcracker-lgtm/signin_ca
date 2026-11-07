@@ -62,6 +62,12 @@ class Event extends Model
         return $this->hasMany(Visitor::class);
     }
 
+    /** The owning agent was suspended by the admin: the event goes dark. */
+    public function isSuspended(): bool
+    {
+        return (bool) $this->agent?->isSuspended();
+    }
+
     public function isCancelled(): bool
     {
         return $this->status === 'cancelled';

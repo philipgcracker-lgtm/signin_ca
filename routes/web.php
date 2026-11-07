@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminAgentController;
 use App\Http\Controllers\CheckinController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
@@ -61,6 +62,17 @@ Route::middleware('auth')->group(function () {
         ->middleware('throttle:60,1')
         ->whereNumber('event')
         ->name('visitors.store');
+});
+
+// Owner-only admin (404 for everyone who is not an active admin).
+Route::middleware(['auth', 'admin', 'throttle:60,1'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/agents', [AdminAgentController::class, 'index'])->name('agents.index');
+    Route::get('/agents/{agent}', [AdminAgentController::class, 'show'])->whereNumber('agent')->name('agents.show');
+    Route::post('/agents/{agent}/approve', [AdminAgentController::class, 'approve'])->whereNumber('agent')->name('agents.approve');
+    Route::post('/agents/{agent}/revoke', [AdminAgentController::class, 'revoke'])->whereNumber('agent')->name('agents.revoke');
+    Route::post('/agents/{agent}/suspend', [AdminAgentController::class, 'suspend'])->whereNumber('agent')->name('agents.suspend');
+    Route::post('/agents/{agent}/unsuspend', [AdminAgentController::class, 'unsuspend'])->whereNumber('agent')->name('agents.unsuspend');
+    Route::post('/agents/{agent}/tier', [AdminAgentController::class, 'tier'])->whereNumber('agent')->name('agents.tier');
 });
 
 Route::middleware('auth')->group(function () {

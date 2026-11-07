@@ -74,6 +74,19 @@ if [ -f "$APPROVE_MARKER" ]; then
   echo "approve: marker processed and removed"
 fi
 
+# Admin access. Put one email per line in /home/scaninca/repositories/signin_ca/.run-make-admin;
+# each becomes an admin on this deploy, then the marker is removed. A bad email is reported, not fatal.
+ADMIN_MARKER="$APP/.run-make-admin"
+if [ -f "$ADMIN_MARKER" ]; then
+  while IFS= read -r line || [ -n "$line" ]; do
+    email="$(printf '%s' "$line" | tr -d '\r\n ')"
+    [ -n "$email" ] || continue
+    "$PHP" artisan scanin:make-admin "$email" || echo "WARN make-admin: could not make $email an admin"
+  done < "$ADMIN_MARKER"
+  rm -f "$ADMIN_MARKER"
+  echo "make-admin: marker processed and removed"
+fi
+
 # One-off test-data cleanup. Marker /home/scaninca/repositories/signin_ca/.run-delete-test-visitors:
 # line 1 = event slug, line 2 = exact number of visitors the event must have. Deletes nothing if the count differs.
 DELETE_MARKER="$APP/.run-delete-test-visitors"

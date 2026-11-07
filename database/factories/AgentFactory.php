@@ -29,6 +29,16 @@ class AgentFactory extends Factory
         ];
     }
 
+    public function admin(): static
+    {
+        return $this->state(fn () => ['is_admin' => true]);
+    }
+
+    public function suspended(): static
+    {
+        return $this->state(fn () => ['suspended_at' => now()]);
+    }
+
     public function unapproved(): static
     {
         return $this->state(fn () => ['approved_at' => null]);

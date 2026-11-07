@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Event;
 use App\Models\Message;
 use App\Sms\SmsProvider;
 use Illuminate\Support\Str;
@@ -38,6 +39,12 @@ class MessageSender
 
         if ($message->visitor?->sms_opt_out) {
             $this->finish($message, 'failed', error: 'Suppressed: visitor opted out.');
+
+            return;
+        }
+
+        if ($message->event_id !== null && Event::query()->with('agent')->find($message->event_id)?->isSuspended()) {
+            $this->finish($message, 'failed', error: 'Suppressed: account suspended.');
 
             return;
         }
