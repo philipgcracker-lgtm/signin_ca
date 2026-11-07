@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
 use App\Models\ShortLink;
 use Illuminate\Http\RedirectResponse;
 
@@ -12,6 +13,12 @@ class ShortLinkController extends Controller
         $link = ShortLink::query()->find($code);
 
         abort_if($link === null, 404);
+
+        // A suspended agent's links stop redirecting (this is the phishing kill switch).
+        abort_if(
+            $link->event_id !== null && Event::query()->with('agent')->find($link->event_id)?->isSuspended(),
+            404,
+        );
 
         $link->increment('clicks');
 

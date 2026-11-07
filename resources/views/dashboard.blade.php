@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('Your open houses') }}
             </h2>
-            @if (auth()->user()->isApproved())
+            @if (auth()->user()->canCreateEvents())
                 <a href="{{ route('events.create') }}" class="rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-white hover:bg-gray-700">New open house</a>
             @endif
         </div>
@@ -15,13 +15,15 @@
             @if (session('error'))
                 <div class="mx-4 rounded-md bg-amber-50 p-4 text-sm text-amber-800 sm:mx-0">{{ session('error') }}</div>
             @endif
-            @unless (auth()->user()->isApproved())
+            @if (auth()->user()->isSuspended())
+                <div class="mx-4 rounded-md bg-red-50 p-4 text-sm text-red-800 sm:mx-0">Your account is suspended. Check-in pages and text messages are turned off. Contact ScanIn to restore it.</div>
+            @elseif (! auth()->user()->isApproved())
                 <div class="mx-4 rounded-md bg-amber-50 p-4 text-sm text-amber-800 sm:mx-0">Your account is waiting for approval. You will be able to create open houses once it is approved.</div>
-            @endunless
+            @endif
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 @if ($events->isEmpty())
                     <div class="p-6 text-gray-600">
-                        No open houses yet.@if (auth()->user()->isApproved()) <a href="{{ route('events.create') }}" class="text-gray-900 underline">Create your first one</a>.@endif
+                        No open houses yet.@if (auth()->user()->canCreateEvents()) <a href="{{ route('events.create') }}" class="text-gray-900 underline">Create your first one</a>.@endif
                     </div>
                 @else
                     <ul class="divide-y divide-gray-100">

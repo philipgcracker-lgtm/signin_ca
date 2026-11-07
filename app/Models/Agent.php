@@ -51,6 +51,27 @@ class Agent extends Authenticatable
         return $this->approved_at !== null;
     }
 
+    public function isAdmin(): bool
+    {
+        return (bool) $this->is_admin && ! $this->isSuspended();
+    }
+
+    public function isSuspended(): bool
+    {
+        return $this->suspended_at !== null;
+    }
+
+    /** Approved and not suspended. */
+    public function canCreateEvents(): bool
+    {
+        return $this->isApproved() && ! $this->isSuspended();
+    }
+
+    public function isPro(): bool
+    {
+        return $this->subscription_tier === 'pro';
+    }
+
     public function events():\Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Event::class);
@@ -80,6 +101,9 @@ class Agent extends Authenticatable
         return [
             'password_hash' => 'hashed',
             'approved_at' => 'datetime',
+            'suspended_at' => 'datetime',
+            'comped_at' => 'datetime',
+            'is_admin' => 'boolean',
             'created_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];

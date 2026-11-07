@@ -43,6 +43,11 @@ class Message extends Model
         ];
     }
 
+    public function event(): BelongsTo
+    {
+        return $this->belongsTo(Event::class);
+    }
+
     public function visitor(): BelongsTo
     {
         return $this->belongsTo(Visitor::class);
