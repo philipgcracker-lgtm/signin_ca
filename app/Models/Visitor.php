@@ -52,6 +52,11 @@ class Visitor extends Model
         return $this->hasMany(Consent::class);
     }
 
+    public function shortLinks(): HasMany
+    {
+        return $this->hasMany(ShortLink::class);
+    }
+
     public function messages(): HasMany
     {
         return $this->hasMany(Message::class);

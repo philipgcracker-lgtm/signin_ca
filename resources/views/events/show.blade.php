@@ -45,12 +45,13 @@
                 <div class="mx-4 rounded-md bg-green-50 p-4 text-sm text-green-800 sm:mx-0">{{ session('status') }}</div>
             @endif
 
-            <div class="grid grid-cols-2 gap-3 px-4 sm:px-0 md:grid-cols-6">
+            <div class="grid grid-cols-2 gap-3 px-4 sm:px-0 md:grid-cols-4 lg:grid-cols-7">
                 @foreach ([
                     'Check-ins' => $summary['checkins'],
                     'Agreed to texts' => $summary['consented'],
                     'Texts sent' => $summary['delivered'],
                     'Texts failed' => $summary['failed'],
+                    'Opened listing' => $summary['clicked'],
                     'Opted out' => $summary['opted_out'],
                     'Feedback' => $summary['feedback'].($summary['avg_score'] ? ' · avg '.number_format($summary['avg_score'], 1) : ''),
                 ] as $label => $n)
@@ -78,6 +79,7 @@
                                     <th class="px-4 py-3">Timeline</th>
                                     <th class="px-4 py-3">Consent</th>
                                     <th class="px-4 py-3">Text</th>
+                                    <th class="px-4 py-3">Listing opened</th>
                                     <th class="px-4 py-3">Feedback</th>
                                 </tr>
                             </thead>
@@ -113,6 +115,15 @@
                                                 @endif
                                             @else
                                                 <span class="text-gray-400">—</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-4 py-3 whitespace-nowrap">
+                                            @if (! $r->has_link)
+                                                <span class="text-gray-400">—</span>
+                                            @elseif ($r->clicks > 0)
+                                                <span class="rounded-full bg-green-50 px-2 py-0.5 text-xs text-green-700">{{ $r->clicks }} {{ \Illuminate\Support\Str::plural('click', $r->clicks) }}</span>
+                                            @else
+                                                <span class="text-gray-500">Not yet</span>
                                             @endif
                                         </td>
                                         <td class="px-4 py-3">
