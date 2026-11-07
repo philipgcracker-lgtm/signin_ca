@@ -12,6 +12,7 @@ return array(
     'App\\Console\\Commands\\SeedPilot' => $baseDir . '/app/Console/Commands/SeedPilot.php',
     'App\\Console\\Commands\\SendQueuedMessages' => $baseDir . '/app/Console/Commands/SendQueuedMessages.php',
     'App\\Http\\Controllers\\AdminAgentController' => $baseDir . '/app/Http/Controllers/AdminAgentController.php',
+    'App\\Http\\Controllers\\AdminDashboardController' => $baseDir . '/app/Http/Controllers/AdminDashboardController.php',
     'App\\Http\\Controllers\\Auth\\AuthenticatedSessionController' => $baseDir . '/app/Http/Controllers/Auth/AuthenticatedSessionController.php',
     'App\\Http\\Controllers\\Auth\\ConfirmablePasswordController' => $baseDir . '/app/Http/Controllers/Auth/ConfirmablePasswordController.php',
     'App\\Http\\Controllers\\Auth\\NewPasswordController' => $baseDir . '/app/Http/Controllers/Auth/NewPasswordController.php',

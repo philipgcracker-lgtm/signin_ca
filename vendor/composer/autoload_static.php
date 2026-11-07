@@ -501,6 +501,7 @@ class ComposerStaticInitcdde4e94b8d38acc6c670a0292e49957
         'App\\Console\\Commands\\SeedPilot' => __DIR__ . '/../..' . '/app/Console/Commands/SeedPilot.php',
         'App\\Console\\Commands\\SendQueuedMessages' => __DIR__ . '/../..' . '/app/Console/Commands/SendQueuedMessages.php',
         'App\\Http\\Controllers\\AdminAgentController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminAgentController.php',
+        'App\\Http\\Controllers\\AdminDashboardController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminDashboardController.php',
         'App\\Http\\Controllers\\Auth\\AuthenticatedSessionController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/AuthenticatedSessionController.php',
         'App\\Http\\Controllers\\Auth\\ConfirmablePasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ConfirmablePasswordController.php',
         'App\\Http\\Controllers\\Auth\\NewPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/NewPasswordController.php',
