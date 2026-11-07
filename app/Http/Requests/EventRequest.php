@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Event;
 use App\Rules\SafeListingUrl;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Carbon;
@@ -23,11 +24,18 @@ class EventRequest extends FormRequest
      */
     public function rules(): array
     {
+        $dateRules = ['required', 'date_format:Y-m-d'];
+        // A new date can not be in the past. When editing, leaving the date as it
+        // was is always fine, so a past event's other details can still be fixed.
+        if (! $this->keepsExistingDate()) {
+            $dateRules[] = 'after_or_equal:today';
+        }
+
         return [
             'address_street' => ['required', 'string', 'min:3', 'max:255'],
             'city' => ['required', 'string', 'min:2', 'max:100'],
             'postal_code' => ['nullable', 'string', 'regex:/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/'],
-            'event_date' => ['required', 'date_format:Y-m-d', 'after_or_equal:today'],
+            'event_date' => $dateRules,
             'start_time' => ['required', 'date_format:H:i'],
             'end_time' => ['required', 'date_format:H:i', 'after:start_time'],
             'listing_url' => ['required', 'url:https', 'max:2000', new SafeListingUrl],
@@ -50,6 +58,17 @@ class EventRequest extends FormRequest
             'listing_url.required' => 'Paste the link to your listing page. Visitors are sent there.',
             'listing_url.url' => 'Enter a full link starting with https://',
         ];
+    }
+
+    private function keepsExistingDate(): bool
+    {
+        if (! $this->isMethod('PATCH')) {
+            return false;
+        }
+
+        $event = Event::query()->where('agent_id', $this->user()->id)->find((int) $this->route('event'));
+
+        return $event !== null && $event->displayStart()->format('Y-m-d') === $this->input('event_date');
     }
 
     /** Toronto wall-clock start. */
