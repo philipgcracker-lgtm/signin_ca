@@ -33,7 +33,7 @@ class VisitorExportController extends Controller
 
         $visitors = $event->visitors()
             ->whereNull('anonymized_at')
-            ->with('consents.consentText')
+            ->with(['consents.consentText', 'shortLinks' => fn ($q) => $q->listing()])
             ->orderBy('id')
             ->get()
             ->map(fn (Visitor $v) => [
@@ -54,7 +54,7 @@ class VisitorExportController extends Controller
                 'Checked in (Toronto time)', 'Source',
                 'Texting consent', 'Texting consent date', 'Texting consent wording',
                 'Marketing consent', 'Marketing consent date', 'Marketing consent wording',
-                'Opted out of texts',
+                'Opted out of texts', 'Listing link clicks',
             ]);
 
             foreach ($visitors as $r) {
@@ -77,6 +77,7 @@ class VisitorExportController extends Controller
                     $r['marketing']['date'],
                     $r['marketing']['version'],
                     $v->sms_opt_out ? 'yes' : 'no',
+                    $v->shortLinks->isEmpty() ? '' : (string) $v->shortLinks->sum('clicks'),
                 ]));
             }
 

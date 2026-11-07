@@ -45,6 +45,16 @@ class ShortLink extends Model
         ]);
     }
 
+    /**
+     * Links that lead to the agent's listing page, as opposed to the signed
+     * feedback-form links (which also carry a visitor_id). Feedback links point
+     * at /f/{visitor} on this app.
+     */
+    public function scopeListing($query)
+    {
+        return $query->where('target_url', 'not like', rtrim((string) config('app.url'), '/').'/f/%');
+    }
+
     public function url(): string
     {
         return rtrim(config('app.url'), '/').'/s/'.$this->code;

@@ -31,7 +31,7 @@ class DashboardController extends Controller
             ->findOrFail($event);
 
         $visitors = $event->visitors()
-            ->with(['consents', 'messages'])
+            ->with(['consents', 'messages', 'shortLinks' => fn ($q) => $q->listing()])
             ->orderByDesc('created_at')
             ->orderByDesc('id')
             ->get();
@@ -48,6 +48,8 @@ class DashboardController extends Controller
                 'visitor' => $visitor,
                 'consent' => $consent,
                 'text' => $text,
+                'has_link' => $visitor->shortLinks->isNotEmpty(),
+                'clicks' => (int) $visitor->shortLinks->sum('clicks'),
             ];
         });
 
@@ -56,6 +58,7 @@ class DashboardController extends Controller
             'consented' => $rows->filter(fn ($r) => $r->consent?->granted && ! $r->consent->revoked_at)->count(),
             'delivered' => $rows->filter(fn ($r) => in_array($r->text?->status, ['sent', 'delivered'], true))->count(),
             'failed' => $rows->filter(fn ($r) => in_array($r->text?->status, ['failed', 'undelivered'], true))->count(),
+            'clicked' => $rows->filter(fn ($r) => $r->clicks > 0)->count(),
             'opted_out' => $rows->filter(fn ($r) => $r->visitor->sms_opt_out)->count(),
             'feedback' => $rows->filter(fn ($r) => $r->visitor->feedback_score !== null)->count(),
             'avg_score' => $rows->pluck('visitor.feedback_score')->filter()->avg(),
