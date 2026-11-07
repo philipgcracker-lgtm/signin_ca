@@ -74,6 +74,21 @@ if [ -f "$APPROVE_MARKER" ]; then
   echo "approve: marker processed and removed"
 fi
 
+# One-off test-data cleanup. Marker /home/scaninca/repositories/signin_ca/.run-delete-test-visitors:
+# line 1 = event slug, line 2 = exact number of visitors the event must have. Deletes nothing if the count differs.
+DELETE_MARKER="$APP/.run-delete-test-visitors"
+if [ -f "$DELETE_MARKER" ]; then
+  DEL_SLUG="$(sed -n 1p "$DELETE_MARKER" | tr -d '\r\n ')"
+  DEL_EXPECT="$(sed -n 2p "$DELETE_MARKER" | tr -d '\r\n ')"
+  if [ -n "$DEL_SLUG" ] && [ -n "$DEL_EXPECT" ]; then
+    "$PHP" artisan scanin:delete-test-visitors "$DEL_SLUG" --expect="$DEL_EXPECT" || echo "WARN delete-test-visitors: nothing deleted (see above)"
+  else
+    echo "WARN delete-test-visitors: marker needs the slug on line 1 and the expected count on line 2; skipped"
+  fi
+  rm -f "$DELETE_MARKER"
+  echo "delete-test-visitors: marker processed and removed"
+fi
+
 [ -e public/storage ] || "$PHP" artisan storage:link
 "$PHP" artisan optimize
 "$PHP" artisan queue:restart
