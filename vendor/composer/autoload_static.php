@@ -514,6 +514,7 @@ class ComposerStaticInitcdde4e94b8d38acc6c670a0292e49957
         'App\\Http\\Controllers\\EventController' => __DIR__ . '/../..' . '/app/Http/Controllers/EventController.php',
         'App\\Http\\Controllers\\EventQrController' => __DIR__ . '/../..' . '/app/Http/Controllers/EventQrController.php',
         'App\\Http\\Controllers\\FeedbackController' => __DIR__ . '/../..' . '/app/Http/Controllers/FeedbackController.php',
+        'App\\Http\\Controllers\\InboundSmsController' => __DIR__ . '/../..' . '/app/Http/Controllers/InboundSmsController.php',
         'App\\Http\\Controllers\\ManualVisitorController' => __DIR__ . '/../..' . '/app/Http/Controllers/ManualVisitorController.php',
         'App\\Http\\Controllers\\ProfileController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProfileController.php',
         'App\\Http\\Controllers\\ShortLinkController' => __DIR__ . '/../..' . '/app/Http/Controllers/ShortLinkController.php',

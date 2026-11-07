@@ -25,6 +25,7 @@ return array(
     'App\\Http\\Controllers\\EventController' => $baseDir . '/app/Http/Controllers/EventController.php',
     'App\\Http\\Controllers\\EventQrController' => $baseDir . '/app/Http/Controllers/EventQrController.php',
     'App\\Http\\Controllers\\FeedbackController' => $baseDir . '/app/Http/Controllers/FeedbackController.php',
+    'App\\Http\\Controllers\\InboundSmsController' => $baseDir . '/app/Http/Controllers/InboundSmsController.php',
     'App\\Http\\Controllers\\ManualVisitorController' => $baseDir . '/app/Http/Controllers/ManualVisitorController.php',
     'App\\Http\\Controllers\\ProfileController' => $baseDir . '/app/Http/Controllers/ProfileController.php',
     'App\\Http\\Controllers\\ShortLinkController' => $baseDir . '/app/Http/Controllers/ShortLinkController.php',
