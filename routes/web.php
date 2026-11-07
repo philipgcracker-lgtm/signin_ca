@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventQrController;
 use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\InboundSmsController;
 use App\Http\Controllers\ManualVisitorController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShortLinkController;
@@ -30,6 +31,11 @@ Route::middleware(['signed', 'throttle:30,1'])->whereNumber('visitor')->group(fu
     Route::post('/f/{visitor}', [FeedbackController::class, 'store'])->name('feedback.store');
     Route::get('/f/{visitor}/thanks', [FeedbackController::class, 'thanks'])->name('feedback.thanks');
 });
+
+// Inbound SMS from Twilio (STOP / DELETE). Signature-checked, CSRF-exempt.
+Route::post('/webhooks/sms/twilio', [InboundSmsController::class, 'twilio'])
+    ->middleware('throttle:120,1')
+    ->name('webhooks.sms.twilio');
 
 // SMS short links.
 Route::get('/s/{code}', [ShortLinkController::class, 'show'])
