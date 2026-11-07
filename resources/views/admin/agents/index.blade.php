@@ -1,7 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="flex flex-wrap items-center justify-between gap-2">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Admin &middot; Agents</h2>
+            <div>
+                <a href="{{ route('admin.dashboard') }}" class="text-sm text-gray-500 hover:text-gray-700">&larr; Overview</a>
+                <h2 class="font-semibold text-xl text-gray-800 leading-tight">Admin &middot; Agents</h2>
+            </div>
             <p class="text-sm text-gray-500">
                 {{ $agents->count() }} {{ \Illuminate\Support\Str::plural('agent', $agents->count()) }}
                 @if ($pending > 0) &middot; <span class="font-medium text-amber-700">{{ $pending }} waiting for approval</span>@endif

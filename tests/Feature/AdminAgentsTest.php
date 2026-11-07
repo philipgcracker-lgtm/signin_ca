@@ -188,7 +188,55 @@ class AdminAgentsTest extends TestCase
 
     public function test_the_nav_shows_admin_only_to_admins(): void
     {
-        $this->actingAs(Agent::factory()->create())->get('/dashboard')->assertDontSee('/admin/agents');
-        $this->actingAs($this->admin())->get('/dashboard')->assertSee('/admin/agents');
+        $this->actingAs(Agent::factory()->create())->get('/dashboard')->assertDontSee('/admin');
+        $this->actingAs($this->admin())->get('/dashboard')->assertSee('/admin');
+    }
+
+    public function test_the_overview_is_admin_only(): void
+    {
+        $this->get('/admin')->assertRedirect('/login');
+        $this->actingAs(Agent::factory()->create())->get('/admin')->assertNotFound();
+        $this->actingAs($this->admin())->get('/admin')->assertOk()->assertSee('Overview');
+    }
+
+    public function test_the_overview_shows_platform_totals_and_no_personal_data(): void
+    {
+        $admin = $this->admin();
+        Agent::factory()->unapproved()->create();
+        Agent::factory()->suspended()->create();
+        $agent = Agent::factory()->create(['full_name' => 'Busy Bea']);
+        $agent->forceFill(['subscription_tier' => 'pro', 'comped_at' => now()])->save();
+
+        $live = Event::factory()->create(['agent_id' => $agent->id, 'event_start' => now()->subHour(), 'event_end' => now()->addHour(), 'status' => 'live']);
+        Event::factory()->create(['agent_id' => $agent->id, 'event_start' => now()->addDays(2), 'event_end' => now()->addDays(2)->addHours(2), 'status' => 'upcoming']);
+
+        $a = Visitor::create(['event_id' => $live->id, 'full_name' => 'Secret Visitor', 'phone_e164' => '+19055550123']);
+        $b = Visitor::create(['event_id' => $live->id, 'full_name' => 'Other Person', 'phone_e164' => '+19055550124']);
+        foreach ([['sent', 2], ['failed', null]] as [$status, $cost]) {
+            Message::create([
+                'visitor_id' => $a->id, 'event_id' => $live->id, 'direction' => 'out', 'channel' => 'sms',
+                'kind' => 'checkin', 'to_addr' => '+19055550123', 'from_addr' => '+12894028756', 'body' => 'secret body',
+                'provider' => 'twilio', 'status' => $status, 'cost_cents' => $cost,
+            ]);
+        }
+        $l1 = ShortLink::createFor($live->listing_url, $live->id, $a->id);
+        $l1->forceFill(['clicks' => 3])->save();
+        ShortLink::createFor($live->listing_url, $live->id, $b->id);
+
+        $res = $this->actingAs($admin)->get('/admin')->assertOk();
+
+        $res->assertViewHas('agents', fn ($s) => $s['total'] === 4 && $s['pending'] === 1 && $s['suspended'] === 1 && $s['pro'] === 1 && $s['comped'] === 1);
+        $res->assertViewHas('events', fn ($s) => $s['total'] === 2 && $s['live'] === 1 && $s['upcoming'] === 1 && $s['ended'] === 0);
+        $res->assertViewHas('visitors', fn ($s) => $s['total'] === 2);
+        $res->assertViewHas('texts', fn ($s) => $s['month'] === 2 && $s['failed_month'] === 1 && $s['failure_rate'] === 50 && $s['cost_month_cents'] === 2);
+        $res->assertViewHas('engagement', fn ($s) => $s['links'] === 2 && $s['clicked'] === 1 && $s['rate'] === 50 && $s['clicks'] === 3);
+        $res->assertViewHas('checkinSeries', fn ($s) => count($s) === 30 && array_sum($s) === 2);
+        $res->assertSee('Busy Bea')->assertSee('Top agents');
+        $res->assertDontSee('Secret Visitor')->assertDontSee('Other Person')->assertDontSee('9055550123')->assertDontSee('secret body');
+    }
+
+    public function test_the_overview_renders_with_an_empty_database(): void
+    {
+        $this->actingAs($this->admin())->get('/admin')->assertOk()->assertSee('No check-ins yet.');
     }
 }

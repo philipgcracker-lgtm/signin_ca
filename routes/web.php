@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminAgentController;
+use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\CheckinController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
@@ -66,6 +67,7 @@ Route::middleware('auth')->group(function () {
 
 // Owner-only admin (404 for everyone who is not an active admin).
 Route::middleware(['auth', 'admin', 'throttle:60,1'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/agents', [AdminAgentController::class, 'index'])->name('agents.index');
     Route::get('/agents/{agent}', [AdminAgentController::class, 'show'])->whereNumber('agent')->name('agents.show');
     Route::post('/agents/{agent}/approve', [AdminAgentController::class, 'approve'])->whereNumber('agent')->name('agents.approve');
