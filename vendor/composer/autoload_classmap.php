@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'App\\Console\\Commands\\ApproveAgent' => $baseDir . '/app/Console/Commands/ApproveAgent.php',
+    'App\\Console\\Commands\\DeleteTestVisitors' => $baseDir . '/app/Console/Commands/DeleteTestVisitors.php',
     'App\\Console\\Commands\\SeedPilot' => $baseDir . '/app/Console/Commands/SeedPilot.php',
     'App\\Console\\Commands\\SendQueuedMessages' => $baseDir . '/app/Console/Commands/SendQueuedMessages.php',
     'App\\Http\\Controllers\\Auth\\AuthenticatedSessionController' => $baseDir . '/app/Http/Controllers/Auth/AuthenticatedSessionController.php',
