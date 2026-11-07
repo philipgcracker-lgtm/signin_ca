@@ -8,8 +8,10 @@ $baseDir = dirname($vendorDir);
 return array(
     'App\\Console\\Commands\\ApproveAgent' => $baseDir . '/app/Console/Commands/ApproveAgent.php',
     'App\\Console\\Commands\\DeleteTestVisitors' => $baseDir . '/app/Console/Commands/DeleteTestVisitors.php',
+    'App\\Console\\Commands\\MakeAdmin' => $baseDir . '/app/Console/Commands/MakeAdmin.php',
     'App\\Console\\Commands\\SeedPilot' => $baseDir . '/app/Console/Commands/SeedPilot.php',
     'App\\Console\\Commands\\SendQueuedMessages' => $baseDir . '/app/Console/Commands/SendQueuedMessages.php',
+    'App\\Http\\Controllers\\AdminAgentController' => $baseDir . '/app/Http/Controllers/AdminAgentController.php',
     'App\\Http\\Controllers\\Auth\\AuthenticatedSessionController' => $baseDir . '/app/Http/Controllers/Auth/AuthenticatedSessionController.php',
     'App\\Http\\Controllers\\Auth\\ConfirmablePasswordController' => $baseDir . '/app/Http/Controllers/Auth/ConfirmablePasswordController.php',
     'App\\Http\\Controllers\\Auth\\NewPasswordController' => $baseDir . '/app/Http/Controllers/Auth/NewPasswordController.php',
@@ -26,6 +28,7 @@ return array(
     'App\\Http\\Controllers\\ProfileController' => $baseDir . '/app/Http/Controllers/ProfileController.php',
     'App\\Http\\Controllers\\ShortLinkController' => $baseDir . '/app/Http/Controllers/ShortLinkController.php',
     'App\\Http\\Controllers\\VisitorExportController' => $baseDir . '/app/Http/Controllers/VisitorExportController.php',
+    'App\\Http\\Middleware\\EnsureAdmin' => $baseDir . '/app/Http/Middleware/EnsureAdmin.php',
     'App\\Http\\Requests\\Auth\\LoginRequest' => $baseDir . '/app/Http/Requests/Auth/LoginRequest.php',
     'App\\Http\\Requests\\CheckinRequest' => $baseDir . '/app/Http/Requests/CheckinRequest.php',
     'App\\Http\\Requests\\EventRequest' => $baseDir . '/app/Http/Requests/EventRequest.php',

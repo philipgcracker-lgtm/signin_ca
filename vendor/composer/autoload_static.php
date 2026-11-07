@@ -497,8 +497,10 @@ class ComposerStaticInitcdde4e94b8d38acc6c670a0292e49957
     public static $classMap = array (
         'App\\Console\\Commands\\ApproveAgent' => __DIR__ . '/../..' . '/app/Console/Commands/ApproveAgent.php',
         'App\\Console\\Commands\\DeleteTestVisitors' => __DIR__ . '/../..' . '/app/Console/Commands/DeleteTestVisitors.php',
+        'App\\Console\\Commands\\MakeAdmin' => __DIR__ . '/../..' . '/app/Console/Commands/MakeAdmin.php',
         'App\\Console\\Commands\\SeedPilot' => __DIR__ . '/../..' . '/app/Console/Commands/SeedPilot.php',
         'App\\Console\\Commands\\SendQueuedMessages' => __DIR__ . '/../..' . '/app/Console/Commands/SendQueuedMessages.php',
+        'App\\Http\\Controllers\\AdminAgentController' => __DIR__ . '/../..' . '/app/Http/Controllers/AdminAgentController.php',
         'App\\Http\\Controllers\\Auth\\AuthenticatedSessionController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/AuthenticatedSessionController.php',
         'App\\Http\\Controllers\\Auth\\ConfirmablePasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ConfirmablePasswordController.php',
         'App\\Http\\Controllers\\Auth\\NewPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/NewPasswordController.php',
@@ -515,6 +517,7 @@ class ComposerStaticInitcdde4e94b8d38acc6c670a0292e49957
         'App\\Http\\Controllers\\ProfileController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProfileController.php',
         'App\\Http\\Controllers\\ShortLinkController' => __DIR__ . '/../..' . '/app/Http/Controllers/ShortLinkController.php',
         'App\\Http\\Controllers\\VisitorExportController' => __DIR__ . '/../..' . '/app/Http/Controllers/VisitorExportController.php',
+        'App\\Http\\Middleware\\EnsureAdmin' => __DIR__ . '/../..' . '/app/Http/Middleware/EnsureAdmin.php',
         'App\\Http\\Requests\\Auth\\LoginRequest' => __DIR__ . '/../..' . '/app/Http/Requests/Auth/LoginRequest.php',
         'App\\Http\\Requests\\CheckinRequest' => __DIR__ . '/../..' . '/app/Http/Requests/CheckinRequest.php',
         'App\\Http\\Requests\\EventRequest' => __DIR__ . '/../..' . '/app/Http/Requests/EventRequest.php',
