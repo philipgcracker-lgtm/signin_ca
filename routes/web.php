@@ -51,6 +51,21 @@ Route::middleware('auth')->group(function () {
     Route::get('/events/{event}', [DashboardController::class, 'show'])
         ->whereNumber('event')
         ->name('events.show');
+    Route::get('/events/{event}/edit', [EventController::class, 'edit'])
+        ->whereNumber('event')
+        ->name('events.edit');
+    Route::patch('/events/{event}', [EventController::class, 'update'])
+        ->middleware('throttle:20,1')
+        ->whereNumber('event')
+        ->name('events.update');
+    Route::post('/events/{event}/cancel', [EventController::class, 'cancel'])
+        ->middleware('throttle:20,1')
+        ->whereNumber('event')
+        ->name('events.cancel');
+    Route::post('/events/{event}/reopen', [EventController::class, 'reopen'])
+        ->middleware('throttle:20,1')
+        ->whereNumber('event')
+        ->name('events.reopen');
     Route::get('/events/{event}/qr.svg', [EventQrController::class, 'svg'])
         ->middleware('throttle:60,1')
         ->whereNumber('event')

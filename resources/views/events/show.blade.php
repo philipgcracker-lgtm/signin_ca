@@ -32,7 +32,10 @@
                 <a href="{{ route('events.sign', $event->id) }}" target="_blank" class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">Door sign</a>
                 <a href="{{ route('events.qr', [$event->id, 'download' => 1]) }}" class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">QR (SVG)</a>
                 <a href="{{ route('visitors.csv', $event->id) }}" class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">Download CSV</a>
-                <a href="{{ route('visitors.create', $event->id) }}" class="rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-white hover:bg-gray-700">Add from paper sheet</a>
+                @unless ($event->isCancelled())
+                    <a href="{{ route('events.edit', $event->id) }}" class="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">Edit</a>
+                    <a href="{{ route('visitors.create', $event->id) }}" class="rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold text-white hover:bg-gray-700">Add from paper sheet</a>
+                @endunless
             </div>
             <p class="w-full text-sm text-gray-500 break-all">Check-in page: <a class="text-gray-700 underline" href="{{ route('checkin.show', $event->slug) }}">{{ route('checkin.show', $event->slug) }}</a></p>
         </div>
@@ -43,6 +46,19 @@
 
             @if (session('status'))
                 <div class="mx-4 rounded-md bg-green-50 p-4 text-sm text-green-800 sm:mx-0">{{ session('status') }}</div>
+            @endif
+            @if (session('error'))
+                <div class="mx-4 rounded-md bg-amber-50 p-4 text-sm text-amber-800 sm:mx-0">{{ session('error') }}</div>
+            @endif
+
+            @if ($event->isCancelled())
+                <div class="mx-4 flex flex-wrap items-center justify-between gap-3 rounded-md bg-red-50 p-4 text-sm text-red-800 sm:mx-0">
+                    <span>This open house is cancelled. The check-in page and QR are turned off. Your check-ins are kept below.</span>
+                    <form method="POST" action="{{ route('events.reopen', $event->id) }}">
+                        @csrf
+                        <button type="submit" class="rounded-md border border-red-300 bg-white px-3 py-1.5 text-sm font-semibold text-red-800 hover:bg-red-100">Reopen</button>
+                    </form>
+                </div>
             @endif
 
             <div class="grid grid-cols-2 gap-3 px-4 sm:px-0 md:grid-cols-4 lg:grid-cols-7">

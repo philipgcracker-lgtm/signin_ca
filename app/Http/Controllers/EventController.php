@@ -31,33 +31,118 @@ class EventController extends Controller
             return $this->pending($request);
         }
 
+        $event = Event::create([
+            'agent_id' => $request->user()->id,
+            'slug' => $this->uniqueSlug($request->validated('address_street'), $request->startsAt()),
+            'province' => 'ON',
+            'status' => 'upcoming',
+        ] + $this->fields($request));
+
+        return redirect()->route('events.show', $event->id)
+            ->with('status', 'Open house created. Print the door sign or download the QR below.');
+    }
+
+    public function edit(Request $request, int $event): View|RedirectResponse
+    {
+        if (! $request->user()->canCreateEvents()) {
+            return $this->pending($request);
+        }
+
+        $event = $this->owned($request, $event);
+
+        if ($event->isCancelled()) {
+            return $this->cancelledNotice($event);
+        }
+
+        return view('events.edit', ['event' => $event]);
+    }
+
+    /**
+     * The slug never changes, so a printed QR or door sign keeps working after the
+     * address or date is corrected.
+     */
+    public function update(EventRequest $request, int $event): RedirectResponse
+    {
+        if (! $request->user()->canCreateEvents()) {
+            return $this->pending($request);
+        }
+
+        $event = $this->owned($request, $event);
+
+        if ($event->isCancelled()) {
+            return $this->cancelledNotice($event);
+        }
+
+        $event->update($this->fields($request));
+
+        return redirect()->route('events.show', $event->id)->with('status', 'Open house updated.');
+    }
+
+    /** Cancel keeps every check-in; the check-in page and QR stop working (404). */
+    public function cancel(Request $request, int $event): RedirectResponse
+    {
+        if (! $request->user()->canCreateEvents()) {
+            return $this->pending($request);
+        }
+
+        $event = $this->owned($request, $event);
+        $event->update(['status' => 'cancelled']);
+
+        return redirect()->route('events.show', $event->id)
+            ->with('status', 'Open house cancelled. The check-in page is turned off. Your list of check-ins is kept.');
+    }
+
+    /** For a cancel that was a mistake. */
+    public function reopen(Request $request, int $event): RedirectResponse
+    {
+        if (! $request->user()->canCreateEvents()) {
+            return $this->pending($request);
+        }
+
+        $event = $this->owned($request, $event);
+        $event->update(['status' => $event->event_start->isFuture() ? 'upcoming' : ($event->hasEnded() ? 'ended' : 'live')]);
+
+        return redirect()->route('events.show', $event->id)
+            ->with('status', 'Open house reopened. The check-in page is back on.');
+    }
+
+    private function owned(Request $request, int $id): Event
+    {
+        return Event::query()->where('agent_id', $request->user()->id)->findOrFail($id);
+    }
+
+    private function cancelledNotice(Event $event): RedirectResponse
+    {
+        return redirect()->route('events.show', $event->id)
+            ->with('error', 'This open house is cancelled. Reopen it to make changes.');
+    }
+
+    /**
+     * The agent-editable columns. Never includes agent_id, slug or status.
+     *
+     * @return array<string, mixed>
+     */
+    private function fields(EventRequest $request): array
+    {
         $data = $request->validated();
         $tz = config('app.timezone');
-        $start = $request->startsAt();
 
-        $postal = isset($data['postal_code']) && $data['postal_code'] !== null
+        $postal = filled($data['postal_code'] ?? null)
             ? strtoupper(substr(preg_replace('/[^A-Za-z0-9]/', '', $data['postal_code']), 0, 3).' '.substr(preg_replace('/[^A-Za-z0-9]/', '', $data['postal_code']), 3))
             : null;
 
-        $event = Event::create([
-            'agent_id' => $request->user()->id,
-            'slug' => $this->uniqueSlug($data['address_street'], $start),
+        return [
             'address_street' => trim($data['address_street']),
             'city' => trim($data['city']),
-            'province' => 'ON',
             'postal_code' => $postal,
             'price' => $data['price'] ?? null,
             'bedrooms' => $data['bedrooms'] ?? null,
             'bathrooms' => $data['bathrooms'] ?? null,
             'blurb' => filled($data['blurb'] ?? null) ? trim($data['blurb']) : null,
             'listing_url' => $data['listing_url'],
-            'event_start' => $start->copy()->setTimezone($tz),
+            'event_start' => $request->startsAt()->copy()->setTimezone($tz),
             'event_end' => $request->endsAt()->setTimezone($tz),
-            'status' => 'upcoming',
-        ]);
-
-        return redirect()->route('events.show', $event->id)
-            ->with('status', 'Open house created. Print the door sign or download the QR below.');
+        ];
     }
 
     private function pending(Request $request): RedirectResponse
