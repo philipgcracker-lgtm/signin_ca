@@ -128,7 +128,8 @@ class ManualVisitorController extends Controller
             ->route('visitors.create', $event->id)
             ->with('status', trim($data['full_name']).' added'.match (true) {
                 $result instanceof Message => '; the listing text is on its way.',
-                $optedOut => '; no text sent: this number has opted out of texts.',
+                // Neutral on purpose: opt-outs are phone-wide, so naming the reason would tell one agent about another agent's visitor.
+                $optedOut => '; no text could be sent to this number.',
                 default => '; no text sent.',
             });
     }
