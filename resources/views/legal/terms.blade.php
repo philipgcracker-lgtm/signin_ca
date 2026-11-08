@@ -9,7 +9,7 @@
 
 @section('content')
 <h1>Terms of service</h1>
-<p class="upd">Last updated: November 7, 2026. These terms are for agents who use ScanIn. If you only checked in at an open house, see the <a href="{{ route('privacy') }}">Privacy policy</a>.</p>
+<p class="upd">Last updated: November 8, 2026. These terms are for agents who use ScanIn. If you only checked in at an open house, see the <a href="{{ route('privacy') }}">Privacy policy</a>.</p>
 
 <h2>1. The service</h2>
 <p>ScanIn lets a real estate agent set up an open house, show visitors a check-in page through a QR code, text visitors who agree to it a link to the agent's own listing page, and see who came. {{ $operator }} runs ScanIn. By creating an account or using ScanIn you agree to these terms.</p>
@@ -36,7 +36,7 @@
 <p>Texts are sent through a third-party provider. We do not guarantee that any text is delivered, because delivery depends on carriers and the visitor's phone. Message and data rates may apply to visitors. We may block or stop a message that appears unlawful or abusive.</p>
 
 <h2>5. Your data</h2>
-<p>You keep ownership of the information you enter. You are the party responsible for visitor information; we handle it for you as described in the <a href="{{ route('privacy') }}">Privacy policy</a>. You can export your visitor list at any time. If a visitor asks to be deleted, we will erase their personal details and may tell you that we did.</p>
+<p>You keep ownership of the information you enter. You are the party responsible for visitor information; we handle it for you as described in the <a href="{{ route('privacy') }}">Privacy policy</a>. You can export your visitor list at any time. If a visitor asks to be deleted, we erase their personal details from ScanIn; we do not notify you. Copies you have already exported are yours to delete, and you must delete them.</p>
 
 <h2>6. Price</h2>
 <p>ScanIn is currently offered in a pilot. We may introduce fees. We will tell you by email before any charge starts, and you can stop using ScanIn instead.</p>

@@ -120,6 +120,13 @@ Added 2026-11-07 (built since the first draft):
 24. ScanIn has no contact email or mailing address of its own yet. The privacy page gives the event's agent as the contact. Does the page need ScanIn's own address and a named privacy contact? [Mailing address left blank by Philip for now; ScanIn operator entity still to be confirmed.]
 25. The privacy page names Twilio (US) and Canadian hosting, and describes cookies. Please check those statements against what you would require.
 
+Added 2026-11-08 (from my own pre-review of the drafts against public sources; full text and 20 merged questions in `(C)Legal pre-review.md`, which is not legal advice):
+26. Is the check-in text a commercial message, and is it enough to identify the agent and brokerage in the text and link to a page with the mailing address, phone and unsubscribe?
+27. Is the CASL private right of action in force? (Public sources disagree.)
+28. Does ScanIn need its own named privacy contact and mailbox, and is it responsible in its own right for consent records, abuse logs and the phone-wide opt-out list?
+29. Terms: please add or review the breach-notice clause, the processor clause (subprocessors, data return on account closure), an indemnity and a liability cap.
+30. May "hosted in Canada" stay on the privacy page before the host confirms in writing, including backups?
+
 ## 7. What is built today (honest status, 2026-11-07)
 
 - Built and live: check-in page, consent record, the check-in text (delivering since the Twilio fix), listing short links, agent login, password reset, agent dashboard with visitor list, paper-sheet entry, CSV export, STOP / DELETE / HELP keyword handling (webhook, signature-checked), event edit and cancel, public privacy and terms pages (linked from the check-in page footer and the consent line, and from the signup form), an admin overview showing counts only.
