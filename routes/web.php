@@ -8,6 +8,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventQrController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\InboundSmsController;
+use App\Http\Controllers\LegalController;
 use App\Http\Controllers\ManualVisitorController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ShortLinkController;
@@ -17,6 +18,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Public legal pages (linked from the check-in form, the landing page and sign-up).
+Route::get('/privacy', [LegalController::class, 'privacy'])->name('privacy');
+Route::get('/terms', [LegalController::class, 'terms'])->name('terms');
 
 // Public visitor check-in (no auth). Plain Blade, no Vite dependency.
 Route::get('/e/{event:slug}', [CheckinController::class, 'show'])->name('checkin.show');

@@ -63,7 +63,7 @@
       <input type="checkbox" id="consent" name="consent" value="1" @checked(old('consent')) required>
       <label for="consent" style="margin:0;font-weight:400"><span>{{ $consentBody }}</span></label>
     </div>
-    <p class="purpose">We use your details only to send you this listing and, if you agree above, ask for your feedback.</p>
+    <p class="purpose">We use your details only to send you this listing and, if you agree above, ask for your feedback. <a href="{{ route('privacy', ['e' => $event->slug]) }}" target="_blank" rel="noopener" style="color:inherit">Read our privacy policy</a>.</p>
 
     <details>
       <summary>Tell us a little more (optional)</summary>
