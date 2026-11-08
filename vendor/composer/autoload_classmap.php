@@ -52,6 +52,7 @@ return array(
     'App\\Services\\FeedbackLink' => $baseDir . '/app/Services/FeedbackLink.php',
     'App\\Services\\MessageSender' => $baseDir . '/app/Services/MessageSender.php',
     'App\\Services\\PhoneNumber' => $baseDir . '/app/Services/PhoneNumber.php',
+    'App\\Services\\SchedulerHeartbeat' => $baseDir . '/app/Services/SchedulerHeartbeat.php',
     'App\\Sms\\LogSmsProvider' => $baseDir . '/app/Sms/LogSmsProvider.php',
     'App\\Sms\\SmsException' => $baseDir . '/app/Sms/SmsException.php',
     'App\\Sms\\SmsProvider' => $baseDir . '/app/Sms/SmsProvider.php',

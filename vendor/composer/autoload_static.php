@@ -541,6 +541,7 @@ class ComposerStaticInitcdde4e94b8d38acc6c670a0292e49957
         'App\\Services\\FeedbackLink' => __DIR__ . '/../..' . '/app/Services/FeedbackLink.php',
         'App\\Services\\MessageSender' => __DIR__ . '/../..' . '/app/Services/MessageSender.php',
         'App\\Services\\PhoneNumber' => __DIR__ . '/../..' . '/app/Services/PhoneNumber.php',
+        'App\\Services\\SchedulerHeartbeat' => __DIR__ . '/../..' . '/app/Services/SchedulerHeartbeat.php',
         'App\\Sms\\LogSmsProvider' => __DIR__ . '/../..' . '/app/Sms/LogSmsProvider.php',
         'App\\Sms\\SmsException' => __DIR__ . '/../..' . '/app/Sms/SmsException.php',
         'App\\Sms\\SmsProvider' => __DIR__ . '/../..' . '/app/Sms/SmsProvider.php',
