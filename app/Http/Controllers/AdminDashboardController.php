@@ -54,7 +54,8 @@ class AdminDashboardController extends Controller
             'feedback' => Visitor::whereNotNull('feedback_score')->count(),
             'avg_score' => Visitor::whereNotNull('feedback_score')->avg('feedback_score'),
         ];
-        $consented = Consent::where('granted', true)->whereNull('revoked_at')->distinct()->count('visitor_id');
+        // Agreed at check-in, whether or not they later replied STOP (that shows as "Opted out").
+        $consented = Consent::where('granted', true)->distinct()->count('visitor_id');
         $visitors['consent_rate'] = $visitors['total'] > 0 ? (int) round($consented / $visitors['total'] * 100) : null;
 
         // Texts (outbound)
