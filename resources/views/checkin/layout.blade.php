@@ -38,7 +38,7 @@ button{width:100%;margin-top:18px;padding:14px;border:0;border-radius:8px;backgr
 <body>
 <div class="wrap">
 @yield('content')
-<p class="foot">Powered by ScanIn</p>
+<p class="foot">Powered by ScanIn &middot; <a href="{{ route('privacy', isset($event) ? ['e' => $event->slug] : []) }}" target="_blank" rel="noopener" style="color:inherit">Privacy</a> &middot; <a href="{{ route('terms') }}" target="_blank" rel="noopener" style="color:inherit">Terms</a></p>
 </div>
 </body>
 </html>

@@ -257,6 +257,8 @@ footer.f .logo span{color:var(--sage)}
 <a class="logo" href="#top">SCAN<span>IN</span></a>
 <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:center">
 <a href="{{ route('login') }}">Log in</a>
+<a href="{{ route('privacy') }}">Privacy</a>
+<a href="{{ route('terms') }}">Terms</a>
 <span>© {{ date('Y') }} ScanIn</span>
 </div>
 </div>
