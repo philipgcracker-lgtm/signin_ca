@@ -15,10 +15,11 @@ class ShortLinkController extends Controller
         abort_if($link === null, 404);
 
         // A suspended agent's links stop redirecting (this is the phishing kill switch).
-        abort_if(
-            $link->event_id !== null && Event::query()->with('agent')->find($link->event_id)?->isSuspended(),
-            404,
-        );
+        // A deleted agent's links stop too (the event outlives the agent row).
+        if ($link->event_id !== null) {
+            $event = Event::query()->with('agent')->find($link->event_id);
+            abort_if($event !== null && ($event->isSuspended() || $event->agent === null), 404);
+        }
 
         $link->increment('clicks');
 

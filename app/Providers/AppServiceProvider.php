@@ -39,8 +39,9 @@ class AppServiceProvider extends ServiceProvider
         // The per-event limit lives in CheckinController::store(), keyed on the
         // resolved event id: a key built from the URL slug could be bypassed
         // with case or trailing-space variants that MySQL treats as equal.
+        // 20/min, not 8: a busy open house shares one house Wi-Fi or carrier NAT address.
         RateLimiter::for('checkin', function (Request $request) {
-            return Limit::perMinute(8)->by('ip:'.$request->ip());
+            return Limit::perMinute(20)->by('ip:'.$request->ip());
         });
     }
 }

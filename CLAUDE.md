@@ -38,7 +38,7 @@ Ask before installing any package not listed in the Build plan. The PDF library 
 - Deploy (live host, cPanel with no SSH, Terminal or Composer): `./release.sh` builds a local `release` branch (main + no-dev `vendor/` + `public/build`) in worktree `~/.scanin-release`; `./release.sh --push` pushes it. Then in cPanel > Git Version Control > `signin_ca` > Manage > Pull or Deploy: Update from Remote, then Deploy HEAD Commit. `.cpanel.yml` runs `scripts/post-deploy.sh` (migrate --force, optimize, queue:restart, `public_html` symlink); its log is `storage/logs/deploy.log` on the server. Ask before every push (main and release).
 - `deploy.sh` (SSH + git pull flow) is unused on this host. Kept for a future host with a shell.
 - Server facts: cPanel account is `scaninca` (with an n), app in `/home/scaninca/repositories/signin_ca`, `public_html` is a symlink to its `public/`, PHP at `/opt/cpanel/ea-php82/root/usr/bin/php`. The server `.env` is hand-made and never in git. Folders under `repositories/` must be 755 or LiteSpeed returns 404 for everything.
-- Scheduler cron (installed in cPanel Cron Jobs, every minute): `/opt/cpanel/ea-php82/root/usr/bin/php /home/scaninca/repositories/signin_ca/artisan schedule:run >> /dev/null 2>&1`. Not yet proven to fire; the first real proof is an M2 SMS job.
+- Scheduler cron (installed in cPanel Cron Jobs, every minute): `/opt/cpanel/ea-php82/root/usr/bin/php /home/scaninca/repositories/signin_ca/artisan schedule:run >> /dev/null 2>&1`. Proven to fire on 2026-11-07: a heartbeat (`App\Services\SchedulerHeartbeat`) stamps the time every minute and the admin overview shows "Scheduler: Running". If that tile ever reads "Not running", the cron has stopped.
 
 ## Working agreement
 

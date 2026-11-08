@@ -251,7 +251,7 @@ class CheckinTest extends TestCase
 
     public function test_checkin_is_rate_limited_per_ip(): void
     {
-        for ($i = 0; $i < 8; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             $this->post('/e/pinehurst/checkin', $this->payload(['phone' => '613555'.str_pad((string) (100 + $i), 4, '0', STR_PAD_LEFT)]));
         }
 
