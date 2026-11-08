@@ -129,9 +129,9 @@ class MessagingJobsTest extends TestCase
         $this->assertSame('74 Pinehurst Drive', $event->address_street);
         $this->assertSame('https://derekbreton.ca/listing/30294107', $event->listing_url);
 
-        // 2026-11-08 14:00 to 16:00 Toronto time, whatever the app timezone is.
-        $this->assertSame('2026-11-08 14:00', $event->event_start->copy()->setTimezone('America/Toronto')->format('Y-m-d H:i'));
-        $this->assertSame('2026-11-08 16:00', $event->event_end->copy()->setTimezone('America/Toronto')->format('Y-m-d H:i'));
+        // 2026-11-15 14:00 to 16:00 Toronto time, whatever the app timezone is.
+        $this->assertSame('2026-11-15 14:00', $event->event_start->copy()->setTimezone('America/Toronto')->format('Y-m-d H:i'));
+        $this->assertSame('2026-11-15 16:00', $event->event_end->copy()->setTimezone('America/Toronto')->format('Y-m-d H:i'));
 
         // Blank profile fields were filled; nothing the owner typed is overwritten.
         $this->assertNotEmpty($agent->fresh()->brokerage_name);

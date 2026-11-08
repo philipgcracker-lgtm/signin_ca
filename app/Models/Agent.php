@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\SetsCreatedAt;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,10 +12,10 @@ use Illuminate\Support\Str;
 class Agent extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\AgentFactory> */
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable, SetsCreatedAt, SoftDeletes;
 
     /**
-     * The PRD schema has created_at (DB default) but no updated_at.
+     * The PRD schema has created_at (DB default, set from PHP by SetsCreatedAt) but no updated_at.
      */
     public $timestamps = false;
 
