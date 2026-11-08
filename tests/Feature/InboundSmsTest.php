@@ -202,6 +202,49 @@ class InboundSmsTest extends TestCase
         $this->assertStringNotContainsString('9055550123', $csv);
     }
 
+    public function test_help_and_info_get_a_scanin_reply_even_from_an_unknown_number(): void
+    {
+        $this->visitor();
+
+        foreach (['HELP', ' help. ', 'Info'] as $word) {
+            $res = $this->inbound($word, from: '+16135550000')->assertOk();
+            $this->assertStringContainsString('<Message>ScanIn: open-house texts sent for your listing agent.', $res->getContent());
+            $this->assertStringContainsString('Reply STOP to opt out, DELETE to erase your info', $res->getContent());
+            $this->assertStringContainsString('scanin.ca/privacy', $res->getContent());
+        }
+
+        $this->assertSame(0, Message::count()); // a stranger's text is still not stored
+    }
+
+    public function test_help_from_a_known_visitor_replies_records_the_message_and_changes_nothing_else(): void
+    {
+        $v = $this->visitor();
+
+        $res = $this->inbound('HELP')->assertOk();
+
+        $this->assertStringContainsString('<Message>ScanIn:', $res->getContent());
+        $this->assertFalse($v->fresh()->sms_opt_out);
+        $this->assertNull($v->consents()->first()->revoked_at);
+        $this->assertSame('in', Message::sole()->direction);
+    }
+
+    public function test_the_help_reply_fits_one_sms_segment(): void
+    {
+        $res = $this->inbound('HELP')->assertOk();
+        preg_match('#<Message>(.*)</Message>#s', $res->getContent(), $m);
+
+        $this->assertLessThanOrEqual(160, strlen(html_entity_decode($m[1], ENT_QUOTES)));
+    }
+
+    public function test_other_words_never_trigger_the_help_reply(): void
+    {
+        $this->visitor();
+
+        $res = $this->inbound('I need help with the price')->assertOk();
+
+        $this->assertStringNotContainsString('<Message>', $res->getContent());
+    }
+
     public function test_opt_out_follows_the_phone_to_a_later_check_in(): void
     {
         $this->visitor();

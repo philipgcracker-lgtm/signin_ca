@@ -26,6 +26,8 @@ class InboundSmsController extends Controller
 
     private const DELETE_WORDS = ['DELETE', 'DELETE MY DATA'];
 
+    private const HELP_WORDS = ['HELP', 'INFO'];
+
     public function twilio(Request $request): Response
     {
         abort_unless($this->validSignature($request), 403);
@@ -37,6 +39,8 @@ class InboundSmsController extends Controller
             || in_array($keyword, self::STOP_WORDS, true)
             || strtoupper((string) $request->input('OptOutType')) === 'STOP';
 
+        $isHelp = in_array($keyword, self::HELP_WORDS, true);
+
         $visitors = $from === '' ? collect() : Visitor::query()
             ->where('phone_e164', $from)
             ->whereNull('anonymized_at')
@@ -44,8 +48,9 @@ class InboundSmsController extends Controller
             ->get();
 
         // Unknown number: nothing of ours to touch, and we do not store strangers' texts.
+        // Anyone who asks for HELP still gets an answer, though.
         if ($visitors->isEmpty()) {
-            return $this->twiml();
+            return $this->twiml($isHelp ? $this->helpText() : null);
         }
 
         $this->record($request, $visitors->first(), $from, $isStop ? ($isDelete ? 'DELETE' : 'STOP') : null);
@@ -65,7 +70,15 @@ class InboundSmsController extends Controller
             return $this->twiml('Your information has been deleted from ScanIn and you will not receive more messages. Reply to this number if you need anything else.');
         }
 
-        return $this->twiml();
+        return $this->twiml($isHelp ? $this->helpText() : null);
+    }
+
+    /** Who is texting, how to stop, how to erase, where the policy is. Kept to one SMS segment. */
+    private function helpText(): string
+    {
+        $host = preg_replace('#^https?://#', '', rtrim((string) config('app.url'), '/'));
+
+        return "ScanIn: open-house texts sent for your listing agent. Reply STOP to opt out, DELETE to erase your info. Msg&data rates may apply. {$host}/privacy";
     }
 
     /** Upper-case, letters and single spaces only: " Stop. " => "STOP". */

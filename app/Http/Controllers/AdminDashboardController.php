@@ -8,6 +8,7 @@ use App\Models\Event;
 use App\Models\Message;
 use App\Models\ShortLink;
 use App\Models\Visitor;
+use App\Services\SchedulerHeartbeat;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
@@ -102,6 +103,12 @@ class AdminDashboardController extends Controller
             'textSeries' => $textSeries,
             'top' => $top->map(fn ($r) => (object) ['agent' => $names->get($r->agent_id), 'n' => (int) $r->n])->filter(fn ($r) => $r->agent),
             'days' => self::DAYS,
+            'system' => [
+                'running' => SchedulerHeartbeat::isRunning(),
+                'last' => SchedulerHeartbeat::lastBeat(),
+                // Texts that should have gone out within a minute or two but are still waiting.
+                'stuck' => Message::query()->where('direction', 'out')->where('status', 'queued')->where('created_at', '<', now()->subMinutes(5))->count(),
+            ],
         ]);
     }
 

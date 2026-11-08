@@ -30,6 +30,11 @@
             $tile('Listing opened', $pct($engagement['rate']), $engagement['clicked'].' of '.$engagement['links'].' links · '.$engagement['clicks'].' clicks'),
         ],
     ];
+    $sections['System'] = [
+        $tile('Scheduler', $system['running'] ? 'Running' : ($system['last'] ? 'Not running' : 'No signal yet'),
+            $system['last'] ? 'last ran '.$system['last']->diffForHumans() : 'cron has not fired since this was added'),
+        $tile('Texts stuck in queue', $system['stuck'], 'waiting more than 5 minutes'),
+    ];
     $charts = ['Check-ins per day' => $checkinSeries, 'Texts sent per day' => $textSeries];
 @endphp
 <x-app-layout>

@@ -2,6 +2,7 @@
 
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use App\Services\SchedulerHeartbeat;
 use Illuminate\Support\Facades\Schedule;
 
 Artisan::command('inspire', function () {
@@ -31,3 +32,8 @@ Schedule::command('messages:send-queued')
     ->everyMinute()
     ->withoutOverlapping(2)
     ->runInBackground();
+
+// Proof the host's cron is firing: the admin overview shows when this last ran.
+Schedule::call(fn () => SchedulerHeartbeat::beat())
+    ->name('scheduler-heartbeat')
+    ->everyMinute();
