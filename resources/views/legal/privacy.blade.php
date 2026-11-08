@@ -13,7 +13,7 @@
 
 @section('content')
 <h1>Privacy policy</h1>
-<p class="upd">Last updated: November 7, 2026</p>
+<p class="upd">Last updated: November 8, 2026</p>
 
 <h2>1. Who we are</h2>
 <p>ScanIn (scanin.ca) is software that real estate agents in Ontario use to run open houses. It is operated by {{ $operator }}@if (filled($address)), {{ $address }}@endif.
@@ -43,8 +43,8 @@
 <h3>Why we collect it</h3>
 <ul>
   <li>To tell the agent you visited.</li>
-  <li>To text you the listing link, if you agreed.</li>
-  <li>To let the agent follow up with you in the ways described in the consent wording you saw when you checked in.</li>
+  <li>To text you the listing link, if you agreed, and, if you agreed, to ask for your feedback.</li>
+  <li>The agent and ScanIn use your details only for these purposes and for the contact described in the consent wording you saw when you checked in.</li>
   <li>To prevent misuse of the check-in form and to keep a record of your consent.</li>
 </ul>
 
@@ -59,16 +59,16 @@
 </ul>
 
 <h3>Where it is stored</h3>
-<p>ScanIn's database and files are hosted on servers in Canada (Ontario).</p>
+<p>ScanIn's database and files are hosted with a Canadian hosting provider.</p>
 <p>Our text-message provider, Twilio, is based in the United States. Your mobile number and the text of messages sent to or from you pass through Twilio and are stored by Twilio in the United States, where they may be accessible to US authorities under US law.</p>
 
 <h3>How long we keep it</h3>
-<p>We keep check-in information for as long as the agent needs their open house records, unless you ask us to delete it sooner.</p>
+<p>We do not yet delete check-in information automatically; we are building that, with a fixed retention period. Until then we keep it while the agent needs their open house records, and we delete it sooner if you ask (see "Your choices and rights" below).</p>
 
 <h3>Your choices and rights</h3>
 <ul>
   <li><b>Stop texts:</b> reply STOP to any text from us.</li>
-  <li><b>Delete your information:</b> reply DELETE to a text from us{{ '' }}@if (filled($email)), or email <a href="mailto:{{ $email }}">{{ $email }}</a>@endif. We erase your name, number, email, answers and message text. We keep a record that you gave and then withdrew consent (when, the wording shown, and the IP address and browser used), without your name or number, so that we can show the texts were lawful.</li>
+  <li><b>Delete your information:</b> reply DELETE to a text from us{{ '' }}@if (filled($email)), or email <a href="mailto:{{ $email }}">{{ $email }}</a>@endif. We erase your name, number, email, answers, any feedback comments and the text of your messages. What stays: a record that you gave and then withdrew consent (the dates, the wording shown, the agent, a reference number, and the IP address and browser used), which does not contain your name or number, kept so that we can show the texts were lawful and answer any complaint or claim. Your check-in time and any 1 to 5 feedback rating also stay, with no link to your name. Copies held by Twilio, or already exported by the agent, are outside ScanIn's control: ask them directly.</li>
   <li><b>See or correct your information:</b> ask the agent who ran the open house{{ '' }}@if (filled($email)) or write to us at <a href="mailto:{{ $email }}">{{ $email }}</a>@endif. We aim to answer within 30 days. Because the agent is responsible for your information, we may pass your request to them and help them answer it.</li>
   <li><b>Complain:</b> you can contact the Office of the Privacy Commissioner of Canada.</li>
 </ul>
@@ -84,7 +84,7 @@
 <p><b>Cookies:</b> when you are logged in we use a session cookie that is necessary for the site to work.</p>
 
 <h2>4. Security</h2>
-<p>Data is sent over HTTPS and passwords are hashed. Agents can only see their own open houses and visitors. No system is perfectly secure. If a breach could cause real harm, we will notify the people affected and the Privacy Commissioner as the law requires.</p>
+<p>Data is sent over HTTPS and passwords are hashed. Agents can only see their own open houses and visitors. No system is perfectly secure. If a security breach could cause real harm, we will tell the agent without delay so that they, as the organization responsible for your information, can notify the people affected and the Privacy Commissioner as the law requires.</p>
 
 <h2>5. Changes</h2>
 <p>We will post changes on this page and update the date above. We will tell agents about material changes by email.</p>

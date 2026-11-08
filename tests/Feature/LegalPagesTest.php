@@ -71,7 +71,7 @@ class LegalPagesTest extends TestCase
 
     public function test_the_page_says_data_is_hosted_in_canada_and_twilio_in_the_us(): void
     {
-        $this->get('/privacy')->assertOk()->assertSee('hosted on servers in Canada')->assertSee('stored by Twilio in the United States');
+        $this->get('/privacy')->assertOk()->assertSee('hosted with a Canadian hosting provider')->assertDontSee('Ontario)')->assertSee('stored by Twilio in the United States');
     }
 
     public function test_no_template_placeholders_are_left_on_the_pages(): void
