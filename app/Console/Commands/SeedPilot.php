@@ -65,8 +65,8 @@ class SeedPilot extends Command
 
         // Event times are Toronto wall-clock; store them in the app timezone like every other timestamp.
         $tz = config('app.timezone');
-        $start = Carbon::create(2026, 11, 8, 14, 0, 0, 'America/Toronto')->setTimezone($tz);
-        $end = Carbon::create(2026, 11, 8, 16, 0, 0, 'America/Toronto')->setTimezone($tz);
+        $start = Carbon::create(2026, 11, 15, 14, 0, 0, 'America/Toronto')->setTimezone($tz);
+        $end = Carbon::create(2026, 11, 15, 16, 0, 0, 'America/Toronto')->setTimezone($tz);
 
         $event = Event::query()->withTrashed()->updateOrCreate(
             ['slug' => 'pinehurst-nov8'],
