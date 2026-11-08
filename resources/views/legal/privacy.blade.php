@@ -24,6 +24,9 @@
 @else
   For privacy questions or requests, contact the agent whose open house you attended and they will pass it to us.
 @endif
+@if (filled(config('scanin.contact_email')) && $agent)
+  To reach ScanIn itself, for example about how ScanIn handles your information: <a href="mailto:{{ config('scanin.contact_email') }}">{{ config('scanin.contact_email') }}</a>.
+@endif
 </p>
 
 <h2>2. If you checked in at an open house</h2>
@@ -91,5 +94,5 @@
 
 <h2>6. Contact</h2>
 <p>{{ $operator }}@if (filled($address)), {{ $address }}@endif
-@if (filled($email)), <a href="mailto:{{ $email }}">{{ $email }}</a>@endif.</p>
+@if (filled(config('scanin.contact_email'))), <a href="mailto:{{ config('scanin.contact_email') }}">{{ config('scanin.contact_email') }}</a>@endif.</p>
 @endsection

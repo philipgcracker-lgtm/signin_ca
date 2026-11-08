@@ -74,6 +74,18 @@ class LegalPagesTest extends TestCase
         $this->get('/privacy')->assertOk()->assertSee('hosted with a Canadian hosting provider')->assertDontSee('Ontario)')->assertSee('stored by Twilio in the United States');
     }
 
+    public function test_scanins_own_contact_shows_alongside_the_agent_and_in_the_contact_section(): void
+    {
+        config(['scanin.contact_email' => 'privacy@scanin.ca']);
+        $agent = \App\Models\Agent::factory()->create(['email' => 'derek@example.com']);
+        $event = Event::factory()->create(['agent_id' => $agent->id]);
+
+        $with = $this->get('/privacy?e='.$event->slug)->assertOk();
+        $with->assertSee('derek@example.com')->assertSee('privacy@scanin.ca');
+
+        $this->get('/privacy')->assertOk()->assertSee('privacy@scanin.ca')->assertDontSee('derek@example.com');
+    }
+
     public function test_no_template_placeholders_are_left_on_the_pages(): void
     {
         foreach (['/privacy', '/terms'] as $url) {
