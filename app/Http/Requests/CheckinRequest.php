@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Services\PhoneNumber;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CheckinRequest extends FormRequest
 {
@@ -28,7 +29,13 @@ class CheckinRequest extends FormRequest
                 },
             ],
             'consent' => ['accepted'],
-            'consent_text_id' => ['required', 'integer', 'exists:consent_texts,id'],
+            // Only online wording already in force: never a paper or future-dated version.
+            'consent_text_id' => [
+                'required', 'integer',
+                Rule::exists('consent_texts', 'id')->where(
+                    fn ($q) => $q->where('version', 'not like', 'paper-%')->where('effective_from', '<=', now()),
+                ),
+            ],
             'email' => ['nullable', 'email:rfc', 'max:255'],
             'working_with_agent' => ['nullable', 'in:0,1'],
             'buying_timeline' => ['nullable', 'in:immediate,1_3_months,3_6_months,browsing'],

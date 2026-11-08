@@ -41,9 +41,15 @@ class CheckinController extends Controller
         ]);
     }
 
+    /** A deleted agent leaves their event behind; the QR on a yard sign must 404, not 500. */
+    private function unavailable(Event $event): bool
+    {
+        return $event->isCancelled() || $event->isSuspended() || $event->agent === null;
+    }
+
     public function show(Event $event): View|Response
     {
-        abort_if($event->isCancelled() || $event->isSuspended(), 404);
+        abort_if($this->unavailable($event), 404);
 
         if ($event->hasEnded()) {
             return $this->leaving($event);
@@ -66,7 +72,7 @@ class CheckinController extends Controller
 
     public function store(CheckinRequest $request, Event $event, SmsProvider $provider): RedirectResponse|Response
     {
-        abort_if($event->isCancelled() || $event->isSuspended(), 404);
+        abort_if($this->unavailable($event), 404);
 
         if ($event->hasEnded()) {
             return $this->leaving($event);
@@ -168,7 +174,7 @@ class CheckinController extends Controller
 
     public function thanks(Event $event): View
     {
-        abort_if($event->isCancelled(), 404);
+        abort_if($this->unavailable($event), 404);
 
         return view('checkin.thanks', ['event' => $event]);
     }

@@ -56,10 +56,16 @@ class ManualVisitorController extends Controller
         $phone = PhoneNumber::toE164($data['phone']);
         $wantsText = (bool) ($data['sms_ok'] ?? false);
 
+        // A number that already replied STOP/DELETE stays opted out: record the lead, queue no text.
+        $optedOut = $wantsText && Visitor::query()->where('phone_e164', $phone)->where('sms_opt_out', true)->exists();
+        if ($optedOut) {
+            $wantsText = false;
+        }
+
         $paper = ConsentText::paper();
         abort_if($wantsText && $paper === null, 503, 'Paper consent wording is not available.');
 
-        $result = DB::transaction(function () use ($data, $phone, $event, $wantsText, $paper, $provider, $request) {
+        $result = DB::transaction(function () use ($data, $phone, $event, $wantsText, $paper, $provider, $request, $optedOut) {
             $exists = Visitor::query()
                 ->where('event_id', $event->id)
                 ->where('phone_e164', $phone)
@@ -120,7 +126,11 @@ class ManualVisitorController extends Controller
 
         return redirect()
             ->route('visitors.create', $event->id)
-            ->with('status', trim($data['full_name']).' added'.($result instanceof Message ? '; the listing text is on its way.' : '; no text sent.'));
+            ->with('status', trim($data['full_name']).' added'.match (true) {
+                $result instanceof Message => '; the listing text is on its way.',
+                $optedOut => '; no text sent: this number has opted out of texts.',
+                default => '; no text sent.',
+            });
     }
 
     /**

@@ -22,7 +22,18 @@ use Illuminate\Support\Str;
  */
 class InboundSmsController extends Controller
 {
-    private const STOP_WORDS = ['STOP', 'STOPALL', 'UNSUBSCRIBE', 'CANCEL', 'END', 'QUIT', 'REVOKE', 'OPTOUT', 'OPT OUT'];
+    private const STOP_WORDS = [
+        'STOP', 'STOPALL', 'UNSUBSCRIBE', 'CANCEL', 'END', 'QUIT', 'REVOKE', 'OPTOUT', 'OPT OUT',
+        // French (Ontario): "arrêt", "arrête", "annuler", "désabonner".
+        'ARRET', 'ARRÊT', 'ARRETE', 'ARRÊTE', 'ARRETER', 'ARRÊTER', 'ANNULER', 'DESABONNER', 'DÉSABONNER', 'DESABONNEMENT', 'DÉSABONNEMENT',
+    ];
+
+    /**
+     * Clear withdrawals written as a sentence ("please stop texting me", "remove me").
+     * Matched on whole words in a short message. A wrong match opts someone out, which is
+     * the safe direction; a missed one would break the CASL rule that any clear withdrawal counts.
+     */
+    private const STOP_PHRASES = '/(?<!\p{L})(STOP|UNSUBSCRIBE|ARRET|ARRÊT|ARRETE|ARRÊTE|DESABONNER|DÉSABONNER|REMOVE ME|TAKE ME OFF|NO MORE (TEXTS|MESSAGES)|LEAVE ME ALONE|DO NOT (TEXT|MESSAGE)|DONT (TEXT|MESSAGE))(?!\p{L})/u';
 
     private const DELETE_WORDS = ['DELETE', 'DELETE MY DATA'];
 
@@ -37,6 +48,7 @@ class InboundSmsController extends Controller
         $isDelete = in_array($keyword, self::DELETE_WORDS, true);
         $isStop = $isDelete
             || in_array($keyword, self::STOP_WORDS, true)
+            || (mb_strlen($keyword) <= 160 && preg_match(self::STOP_PHRASES, $keyword) === 1)
             || strtoupper((string) $request->input('OptOutType')) === 'STOP';
 
         $isHelp = in_array($keyword, self::HELP_WORDS, true);
