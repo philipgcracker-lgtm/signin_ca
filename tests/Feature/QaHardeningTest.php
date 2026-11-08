@@ -147,7 +147,7 @@ class QaHardeningTest extends TestCase
         $this->actingAs($this->agent)
             ->post("/events/{$this->event->id}/visitors", ['full_name' => 'Priya Sharma', 'phone' => '(905) 555-0111', 'sms_ok' => '1'])
             ->assertRedirect()
-            ->assertSessionHas('status', fn ($s) => str_contains($s, 'opted out'));
+            ->assertSessionHas('status', fn ($s) => str_contains($s, 'no text could be sent') && ! str_contains($s, 'opted'));
 
         $this->assertSame(1, Visitor::where('event_id', $this->event->id)->count());
         $this->assertSame(0, Consent::where('visitor_id', Visitor::where('event_id', $this->event->id)->value('id'))->count());
