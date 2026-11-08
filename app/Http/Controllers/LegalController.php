@@ -18,7 +18,13 @@ class LegalController extends Controller
         $agent = null;
 
         if (is_string($slug = $request->query('e')) && $slug !== '') {
-            $agent = Event::query()->where('slug', $slug)->with('agent')->first()?->agent;
+            $event = Event::query()->where('slug', $slug)->with('agent')->first();
+
+            // Same rule as the check-in page: a cancelled event or a suspended or removed
+            // agent is not shown, so their details are not exposed through an old link.
+            if ($event && $event->agent && ! $event->isCancelled() && ! $event->isSuspended()) {
+                $agent = $event->agent;
+            }
         }
 
         return view('legal.privacy', ['agent' => $agent]);

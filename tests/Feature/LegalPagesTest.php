@@ -53,6 +53,22 @@ class LegalPagesTest extends TestCase
         $this->get('/privacy')->assertOk()->assertDontSee('derek@example.com');
     }
 
+    public function test_a_cancelled_event_or_suspended_agent_is_not_exposed_through_the_privacy_link(): void
+    {
+        $agent = \App\Models\Agent::factory()->create(['email' => 'derek@example.com']);
+        $cancelled = Event::factory()->cancelled()->create(['agent_id' => $agent->id]);
+        $this->get('/privacy?e='.$cancelled->slug)->assertOk()->assertDontSee('derek@example.com');
+
+        $suspended = \App\Models\Agent::factory()->suspended()->create(['email' => 'gone@example.com']);
+        $event = Event::factory()->create(['agent_id' => $suspended->id]);
+        $this->get('/privacy?e='.$event->slug)->assertOk()->assertDontSee('gone@example.com');
+
+        $removed = \App\Models\Agent::factory()->create(['email' => 'removed@example.com']);
+        $e2 = Event::factory()->create(['agent_id' => $removed->id]);
+        $removed->delete();
+        $this->get('/privacy?e='.$e2->slug)->assertOk()->assertDontSee('removed@example.com');
+    }
+
     public function test_the_page_says_data_is_hosted_in_canada_and_twilio_in_the_us(): void
     {
         $this->get('/privacy')->assertOk()->assertSee('hosted on servers in Canada')->assertSee('stored by Twilio in the United States');
