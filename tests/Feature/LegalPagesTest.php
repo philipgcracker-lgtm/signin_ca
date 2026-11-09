@@ -74,6 +74,13 @@ class LegalPagesTest extends TestCase
         $this->get('/privacy')->assertOk()->assertSee('hosted with a Canadian hosting provider')->assertDontSee('Ontario)')->assertSee('stored by Twilio in the United States');
     }
 
+    public function test_the_page_states_the_24_month_retention_the_sweep_enforces(): void
+    {
+        $this->get('/privacy')->assertOk()
+            ->assertSee('erased automatically 24 months after the open house ends')
+            ->assertDontSee('do not yet delete');
+    }
+
     public function test_scanins_own_contact_shows_alongside_the_agent_and_in_the_contact_section(): void
     {
         config(['scanin.contact_email' => 'privacy@scanin.ca']);

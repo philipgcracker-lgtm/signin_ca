@@ -66,7 +66,7 @@
 <p>Our text-message provider, Twilio, is based in the United States. Your mobile number and the text of messages sent to or from you pass through Twilio and are stored by Twilio in the United States, where they may be accessible to US authorities under US law.</p>
 
 <h3>How long we keep it</h3>
-<p>We do not yet delete check-in information automatically; we are building that, with a fixed retention period. Until then we keep it while the agent needs their open house records, and we delete it sooner if you ask (see "Your choices and rights" below).</p>
+<p>Check-in information is erased automatically 24 months after the open house ends: your name, number, email, answers, any feedback comments and the text of your messages. What stays is the same as when you ask us to delete it (see "Your choices and rights" below), and the consent record is kept to show the texts were lawful. You can ask us to delete your information sooner at any time.</p>
 
 <h3>Your choices and rights</h3>
 <ul>

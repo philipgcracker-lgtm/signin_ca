@@ -37,3 +37,9 @@ Schedule::command('messages:send-queued')
 Schedule::call(fn () => SchedulerHeartbeat::beat())
     ->name('scheduler-heartbeat')
     ->everyMinute();
+
+// Anonymize visitors past their retention period (24 months after the event by default).
+Schedule::command('visitors:retention-sweep')
+    ->dailyAt('03:30')
+    ->timezone('America/Toronto')
+    ->withoutOverlapping(60);
