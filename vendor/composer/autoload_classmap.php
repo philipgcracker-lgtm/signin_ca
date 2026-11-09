@@ -9,6 +9,7 @@ return array(
     'App\\Console\\Commands\\ApproveAgent' => $baseDir . '/app/Console/Commands/ApproveAgent.php',
     'App\\Console\\Commands\\DeleteTestVisitors' => $baseDir . '/app/Console/Commands/DeleteTestVisitors.php',
     'App\\Console\\Commands\\MakeAdmin' => $baseDir . '/app/Console/Commands/MakeAdmin.php',
+    'App\\Console\\Commands\\RetentionSweep' => $baseDir . '/app/Console/Commands/RetentionSweep.php',
     'App\\Console\\Commands\\SeedPilot' => $baseDir . '/app/Console/Commands/SeedPilot.php',
     'App\\Console\\Commands\\SendQueuedMessages' => $baseDir . '/app/Console/Commands/SendQueuedMessages.php',
     'App\\Http\\Controllers\\AdminAgentController' => $baseDir . '/app/Http/Controllers/AdminAgentController.php',
