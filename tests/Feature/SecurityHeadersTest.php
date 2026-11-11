@@ -25,4 +25,20 @@ class SecurityHeadersTest extends TestCase
             ->assertSee('href="#content"', false)
             ->assertSee('property="og:title"', false);
     }
+
+    public function test_login_pages_are_noindex_with_own_titles_and_legal_pages_have_descriptions(): void
+    {
+        $this->get('/login')->assertOk()->assertSee('name="robots" content="noindex"', false)->assertSee('<title>Log in |', false);
+        $this->get('/forgot-password')->assertOk()->assertSee('<title>Reset your password |', false);
+        $this->get('/privacy')->assertOk()->assertSee('name="description"', false);
+        $this->get('/terms')->assertOk()->assertSee('name="description"', false);
+    }
+
+    public function test_sitemap_lists_public_pages_only(): void
+    {
+        $this->get('/sitemap.xml')->assertOk()
+            ->assertHeader('Content-Type', 'application/xml')
+            ->assertSee('/privacy', false)->assertSee('/terms', false)
+            ->assertDontSee('/login', false);
+    }
 }

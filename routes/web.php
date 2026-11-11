@@ -19,6 +19,19 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/sitemap.xml', function () {
+    $urls = [url('/'), route('privacy'), route('terms')];
+    $xml = '<?xml version="1.0" encoding="UTF-8"?>'."
+".'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."
+";
+    foreach ($urls as $u) {
+        $xml .= '  <url><loc>'.e($u).'</loc></url>'."
+";
+    }
+
+    return response($xml.'</urlset>', 200, ['Content-Type' => 'application/xml']);
+})->name('sitemap');
+
 // Public legal pages (linked from the check-in form, the landing page and sign-up).
 Route::get('/privacy', [LegalController::class, 'privacy'])->name('privacy');
 Route::get('/terms', [LegalController::class, 'terms'])->name('terms');
