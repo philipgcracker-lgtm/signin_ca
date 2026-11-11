@@ -14,7 +14,7 @@
 
 @section('content')
 <h1>Privacy policy</h1>
-<p class="upd">Last updated: November 8, 2026</p>
+<p class="upd">Last updated: November 11, 2026</p>
 
 <h2>1. Who we are</h2>
 <p>ScanIn (scanin.ca) is software that real estate agents in Ontario use to run open houses. It is operated by {{ $operator }}@if (filled($address)), {{ $address }}@endif.
@@ -78,7 +78,8 @@
 </ul>
 
 <h3>Cookies</h3>
-<p>The check-in and feedback pages set small cookies that are needed for the form to work and to protect it against forged submissions. They expire after two hours and are not used for tracking or advertising. We do not use advertising or third-party tracking scripts.</p>
+<p>The check-in and feedback pages set small cookies that are needed for the form to work and to protect it against forged submissions. They expire after two hours and are not used for tracking or advertising. The check-in and feedback pages, the login pages and the agent dashboard contain no advertising or third-party tracking scripts.</p>
+<p>The public home page at scanin.ca uses Google Tag Manager and Google Analytics to count visits to that page. Google may set cookies in your browser and receive your IP address and browser details when you open it. This applies only to the home page, not to the pages visitors use to check in. To avoid it, block these cookies in your browser or use a tracking blocker.</p>
 
 <h2>3. If you are an agent</h2>
 <p><b>What we collect:</b> your name, email, phone number, brokerage, password (stored only in scrambled form), the open houses you create, the visitor records they produce, and technical logs.</p>
