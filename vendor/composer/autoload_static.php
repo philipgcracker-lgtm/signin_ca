@@ -497,6 +497,7 @@ class ComposerStaticInitcdde4e94b8d38acc6c670a0292e49957
     public static $classMap = array (
         'App\\Console\\Commands\\ApproveAgent' => __DIR__ . '/../..' . '/app/Console/Commands/ApproveAgent.php',
         'App\\Console\\Commands\\DeleteTestVisitors' => __DIR__ . '/../..' . '/app/Console/Commands/DeleteTestVisitors.php',
+        'App\\Console\\Commands\\IpReport' => __DIR__ . '/../..' . '/app/Console/Commands/IpReport.php',
         'App\\Console\\Commands\\MakeAdmin' => __DIR__ . '/../..' . '/app/Console/Commands/MakeAdmin.php',
         'App\\Console\\Commands\\RetentionSweep' => __DIR__ . '/../..' . '/app/Console/Commands/RetentionSweep.php',
         'App\\Console\\Commands\\SeedPilot' => __DIR__ . '/../..' . '/app/Console/Commands/SeedPilot.php',
