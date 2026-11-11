@@ -34,6 +34,7 @@ return array(
     'App\\Http\\Controllers\\ShortLinkController' => $baseDir . '/app/Http/Controllers/ShortLinkController.php',
     'App\\Http\\Controllers\\VisitorExportController' => $baseDir . '/app/Http/Controllers/VisitorExportController.php',
     'App\\Http\\Middleware\\EnsureAdmin' => $baseDir . '/app/Http/Middleware/EnsureAdmin.php',
+    'App\\Http\\Middleware\\SecurityHeaders' => $baseDir . '/app/Http/Middleware/SecurityHeaders.php',
     'App\\Http\\Requests\\Auth\\LoginRequest' => $baseDir . '/app/Http/Requests/Auth/LoginRequest.php',
     'App\\Http\\Requests\\CheckinRequest' => $baseDir . '/app/Http/Requests/CheckinRequest.php',
     'App\\Http\\Requests\\EventRequest' => $baseDir . '/app/Http/Requests/EventRequest.php',
