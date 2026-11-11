@@ -71,6 +71,8 @@ class CheckinTest extends TestCase
             'event_start' => '2026-11-08 19:00:00',
             'event_end' => '2026-11-08 21:00:00',
         ]);
+        // The wording must already be in effect at the traveled-to time, whatever today's date is.
+        $this->consent->update(['effective_from' => '2026-01-01 00:00:00']);
         $this->travelTo(\Illuminate\Support\Carbon::parse('2026-11-08 18:00:00', 'UTC'));
 
         $this->get('/e/pinehurst')

@@ -102,6 +102,21 @@ if [ -f "$DELETE_MARKER" ]; then
   echo "delete-test-visitors: marker processed and removed"
 fi
 
+# One-off IP diagnostic. Marker /home/scaninca/repositories/signin_ca/.run-ip-report: line 1 = event slug.
+# Read-only; prints masked client IPs to the deploy log to check the proxy setup.
+IP_MARKER="$APP/.run-ip-report"
+if [ -f "$IP_MARKER" ]; then
+  IP_SLUG="$(sed -n 1p "$IP_MARKER" | tr -d '
+ ')"
+  if [ -n "$IP_SLUG" ]; then
+    "$PHP" artisan scanin:ip-report "$IP_SLUG" || echo "WARN ip-report failed (see above)"
+  else
+    echo "WARN ip-report: marker needs the event slug on line 1; skipped"
+  fi
+  rm -f "$IP_MARKER"
+  echo "ip-report: marker processed and removed"
+fi
+
 [ -e public/storage ] || "$PHP" artisan storage:link
 "$PHP" artisan optimize
 "$PHP" artisan queue:restart
