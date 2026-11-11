@@ -9,6 +9,9 @@
 <meta property="og:title" content="ScanIn: open house sign-in for Canadian agents">
 <meta property="og:description" content="Guests scan a QR code at the door and check in on their own phone. ScanIn texts them your listing link and keeps every guest, with consent on file, in one list.">
 <meta name="twitter:card" content="summary">
+<!-- Google Tag Manager (marketing home page only; not on check-in, login or dashboard pages) -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-MTQTKZFM');</script>
+<!-- End Google Tag Manager -->
 <meta name="description" content="Guests scan a QR code at the door and check in on their own phone. ScanIn texts them your listing link and keeps every guest, with consent on file, in one list.">
 <style>
 :root{--ink:#1f2623;--dark:#1a1f1c;--cream:#f7f4ee;--paper:#fbf9f5;--line:#e0d9cc;--mute:#5b635d;--sage:#4a6e4e;--sage-l:#a9bfa6;--sage-bg:#e3eadf;--sand:#d4c0ae;--soft:#c9cfc9;--head:'Inter Tight',Inter,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
@@ -108,6 +111,7 @@ footer.f .logo span{color:var(--sage)}
 </style>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) --><noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MTQTKZFM" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript><!-- End Google Tag Manager (noscript) -->
 <a href="#content" class="skip-link">Skip to main content</a>
 
 <!-- ===== HERO ===== -->
