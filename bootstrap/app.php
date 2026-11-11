@@ -17,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // check untouched (no trimming, no ""->null). A reply like "STOP\n" would fail otherwise.
         $middleware->trimStrings(except: [fn (\Illuminate\Http\Request $request) => $request->is('webhooks/*')]);
         $middleware->convertEmptyStringsToNull(except: [fn (\Illuminate\Http\Request $request) => $request->is('webhooks/*')]);
+        $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
         $middleware->alias(['admin' => \App\Http\Middleware\EnsureAdmin::class]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

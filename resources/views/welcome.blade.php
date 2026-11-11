@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ScanIn: open house sign-in for Canadian agents</title>
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ url('/') }}">
+<meta property="og:title" content="ScanIn: open house sign-in for Canadian agents">
+<meta property="og:description" content="Guests scan a QR code at the door and check in on their own phone. ScanIn texts them your listing link and keeps every guest, with consent on file, in one list.">
+<meta name="twitter:card" content="summary">
 <meta name="description" content="Guests scan a QR code at the door and check in on their own phone. ScanIn texts them your listing link and keeps every guest, with consent on file, in one list.">
 <style>
 :root{--ink:#1f2623;--dark:#1a1f1c;--cream:#f7f4ee;--paper:#fbf9f5;--line:#e0d9cc;--mute:#5b635d;--sage:#4a6e4e;--sage-l:#a9bfa6;--sage-bg:#e3eadf;--sand:#d4c0ae;--soft:#c9cfc9;--head:'Inter Tight',Inter,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
@@ -11,7 +16,11 @@
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--cream);color:var(--ink);font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:16px;line-height:1.55}
 a{color:var(--sage)}
-a:focus-visible{outline:2px solid var(--sage-l);outline-offset:2px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--sage);outline-offset:3px}
+.hero :focus-visible,.card :focus-visible,.final :focus-visible,footer :focus-visible{outline-color:var(--sage-l)}
+.skip-link{position:absolute;top:-100px;left:16px;background:var(--ink);color:#f5f0e8;padding:12px 18px;border-radius:6px;z-index:9999;text-decoration:none;font-weight:600}
+.skip-link:focus{top:16px;outline-color:var(--sage-l)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 h1,h2,h3{font-family:var(--head);font-weight:300;margin:0}
 p{margin:0}
 .wrap{max-width:1200px;margin:0 auto}
@@ -55,7 +64,7 @@ section.s{padding:104px 24px}
 .center{display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px}
 .center h2{font-size:clamp(34px,4.4vw,60px);line-height:1.05;letter-spacing:-.03em}
 .center p{font-size:17px;color:var(--mute);max-width:580px}
-.strike{color:#8a918b;text-decoration:line-through;text-decoration-thickness:2px}
+.strike{color:#555d57;text-decoration-color:currentColor;text-decoration:line-through;text-decoration-thickness:2px}
 .flow{width:100%;margin-top:40px;background-color:var(--cream);background-image:radial-gradient(#d9d2c4 1.2px,transparent 1.2px);background-size:22px 22px;border-radius:22px;padding:48px 32px;display:flex;flex-wrap:wrap;gap:32px;align-items:center;justify-content:center}
 .chips{flex:1 1 260px;display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
 .chip{background:var(--paper);border:1px solid var(--line);border-radius:9999px;padding:8px 14px;font-size:13px}
@@ -99,8 +108,10 @@ footer.f .logo span{color:var(--sage)}
 </style>
 </head>
 <body>
+<a href="#content" class="skip-link">Skip to main content</a>
 
 <!-- ===== HERO ===== -->
+<main>
 <section class="hero" id="top">
 <svg class="qrtex" aria-hidden="true" width="560" height="560" viewBox="0 0 28 28"><path fill="#f5f0e8" d="M0 0h7v7H0z M1 1v5h5V1z M2 2h3v3H2z M21 0h7v7h-7z M22 1v5h5V1z M23 2h3v3h-3z M0 21h7v7H0z M1 22v5h5v-5z M2 23h3v3H2z M9 0h2v1H9z M12 1h1v2h-1z M14 0h3v1h-3z M18 2h1v3h-1z M9 4h3v1H9z M14 3h2v2h-2z M9 7h1v2H9z M11 8h3v1h-3z M16 7h2v1h-2z M19 8h2v2h-2z M23 9h3v1h-3z M0 9h2v2H0z M3 10h3v1H3z M8 11h2v2H8z M12 11h1v3h-1z M15 10h2v2h-2z M20 12h3v1h-3z M25 11h3v2h-3z M1 13h3v1H1z M5 14h2v2H5z M10 15h3v1h-3z M15 14h1v3h-1z M18 15h2v1h-2z M22 14h2v2h-2z M26 15h2v1h-2z M0 17h2v2H0z M8 18h2v1H8z M12 17h2v2h-2z M17 18h3v1h-3z M22 18h1v3h-1z M24 19h3v1h-3z M9 21h1v3H9z M11 22h3v1h-3z M15 21h2v2h-2z M18 22h1v2h-1z M20 21h2v1h-2z M25 22h3v2h-3z M10 26h2v2h-2z M14 25h3v1h-3z M19 25h2v2h-2z M23 26h3v1h-3z"/></svg>
 
@@ -119,7 +130,7 @@ footer.f .logo span{color:var(--sage)}
 </nav>
 </header>
 
-<div class="hero-grid">
+<div class="hero-grid" id="content" tabindex="-1">
 <div class="hero-l">
 <div style="display:flex;gap:10px;flex-wrap:wrap">
 <span class="pill">Piloting at Niagara open houses this fall</span>
@@ -168,7 +179,7 @@ footer.f .logo span{color:var(--sage)}
 <!-- ===== CLIPBOARD -> LIST ===== -->
 <section class="s">
 <div class="wrap center">
-<h2><span class="strike">Clipboard</span> One list.</h2>
+<h2><span class="sr-only">Instead of a clipboard: </span><del class="strike" aria-hidden="true">Clipboard</del> One list.</h2>
 <p>Every guest who walks through the door lands in one place: name, mobile, consent on file, and what they told you they want.</p>
 <div class="flow">
 <div class="chips" aria-hidden="true">
@@ -251,6 +262,7 @@ footer.f .logo span{color:var(--sage)}
 <a class="btn btn-light" href="{{ config('scanin.registration_open') ? route('register') : route('login') }}">Get started</a>
 </div>
 </section>
+</main>
 
 <footer class="f">
 <div class="wrap">
