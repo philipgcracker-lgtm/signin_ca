@@ -1,6 +1,7 @@
 @extends('legal.layout')
 
 @section('title', 'Terms of service')
+@section('description', 'The terms for real estate agents who use ScanIn to run open house check-ins, send listing links by text and keep visitor lists.')
 
 @php
     $operator = config('scanin.operator_name');

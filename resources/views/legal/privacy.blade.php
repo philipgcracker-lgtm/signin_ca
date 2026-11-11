@@ -1,6 +1,7 @@
 @extends('legal.layout')
 
 @section('title', 'Privacy policy')
+@section('description', 'How ScanIn collects, uses and protects the information open house visitors share when they check in, and how to ask for it to be deleted.')
 
 @php
     $operator = config('scanin.operator_name');
