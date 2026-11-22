@@ -521,6 +521,7 @@ class ComposerStaticInitcdde4e94b8d38acc6c670a0292e49957
         'App\\Http\\Controllers\\ManualVisitorController' => __DIR__ . '/../..' . '/app/Http/Controllers/ManualVisitorController.php',
         'App\\Http\\Controllers\\ProfileController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProfileController.php',
         'App\\Http\\Controllers\\ShortLinkController' => __DIR__ . '/../..' . '/app/Http/Controllers/ShortLinkController.php',
+        'App\\Http\\Controllers\\SignInSheetController' => __DIR__ . '/../..' . '/app/Http/Controllers/SignInSheetController.php',
         'App\\Http\\Controllers\\VisitorExportController' => __DIR__ . '/../..' . '/app/Http/Controllers/VisitorExportController.php',
         'App\\Http\\Middleware\\EnsureAdmin' => __DIR__ . '/../..' . '/app/Http/Middleware/EnsureAdmin.php',
         'App\\Http\\Middleware\\SecurityHeaders' => __DIR__ . '/../..' . '/app/Http/Middleware/SecurityHeaders.php',

@@ -32,6 +32,7 @@ return array(
     'App\\Http\\Controllers\\ManualVisitorController' => $baseDir . '/app/Http/Controllers/ManualVisitorController.php',
     'App\\Http\\Controllers\\ProfileController' => $baseDir . '/app/Http/Controllers/ProfileController.php',
     'App\\Http\\Controllers\\ShortLinkController' => $baseDir . '/app/Http/Controllers/ShortLinkController.php',
+    'App\\Http\\Controllers\\SignInSheetController' => $baseDir . '/app/Http/Controllers/SignInSheetController.php',
     'App\\Http\\Controllers\\VisitorExportController' => $baseDir . '/app/Http/Controllers/VisitorExportController.php',
     'App\\Http\\Middleware\\EnsureAdmin' => $baseDir . '/app/Http/Middleware/EnsureAdmin.php',
     'App\\Http\\Middleware\\SecurityHeaders' => $baseDir . '/app/Http/Middleware/SecurityHeaders.php',
