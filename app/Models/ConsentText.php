@@ -53,6 +53,15 @@ class ConsentText extends Model
     }
 
     /**
+     * The wording with the agent placeholders turned into blanks to write in, for
+     * the public printable sheet where no agent is signed in.
+     */
+    public function renderBlank(): string
+    {
+        return str_replace(['{agent_name}', '{brokerage}'], '____________________', $this->body);
+    }
+
+    /**
      * Fill the agent placeholders for display. The stored body keeps the
      * placeholders; the version identifies exactly what was shown.
      */
