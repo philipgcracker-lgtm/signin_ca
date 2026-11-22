@@ -21,6 +21,10 @@ Route::get('/', function () {
 
 Route::get('/sitemap.xml', function () {
     $urls = [url('/'), route('privacy'), route('terms')];
+    // The sheet page needs the paper consent wording from the database to render.
+    if (\App\Models\ConsentText::paper() !== null) {
+        $urls[] = route('sheet');
+    }
     $xml = '<?xml version="1.0" encoding="UTF-8"?>'."
 ".'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."
 ";
@@ -35,6 +39,9 @@ Route::get('/sitemap.xml', function () {
 // Public legal pages (linked from the check-in form, the landing page and sign-up).
 Route::get('/privacy', [LegalController::class, 'privacy'])->name('privacy');
 Route::get('/terms', [LegalController::class, 'terms'])->name('terms');
+
+// Free printable sign-in sheet (marketing page; consent line read from consent_texts).
+Route::get('/open-house-sign-in-sheet', [\App\Http\Controllers\SignInSheetController::class, 'show'])->name('sheet');
 
 // Public visitor check-in (no auth). Plain Blade, no Vite dependency.
 Route::get('/e/{event:slug}', [CheckinController::class, 'show'])->name('checkin.show');

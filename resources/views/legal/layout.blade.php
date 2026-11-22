@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>@yield('title') | ScanIn</title>
 <meta name="description" content="@yield('description')">
+@stack('head')
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f7f4ee;color:#1f2623;font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
