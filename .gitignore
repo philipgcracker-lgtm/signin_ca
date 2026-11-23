@@ -41,3 +41,6 @@ yarn-error.log
 
 # Domain-verification files (Twilio etc.) are placed in the docroot by hand; cPanel refuses to deploy while untracked files exist
 /public/*.html
+
+# LiteSpeed/PHP writes this into the repo root on the server; an untracked file blocks cPanel "Deploy HEAD Commit"
+error_log
